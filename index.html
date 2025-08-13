@@ -104,7 +104,130 @@
     .tabs{ order:-1 }
     .tab{ min-height:44px }
   }
+  /* --- Minimal circuit sim styles --- */
+  .sim{ width:100%; max-width:920px; margin-bottom:16px }
+  .circuit{ width:100%; height:120px; display:block }
+  .wire{ stroke: color-mix(in srgb, var(--text) 28%, transparent); stroke-width:3; fill:none; stroke-linecap:butt }
+  .wire.high{ stroke:#10b981 }
+  .node{ fill: color-mix(in srgb, var(--text) 28%, transparent) }
+  .node.high{ fill:#10b981 }
+  .dangling{ fill:none; stroke: color-mix(in srgb, var(--text) 28%, transparent); stroke-width:2 }
+  .bit-rect{ fill: var(--panel); stroke: var(--border) }
+  .bit-label{ font-weight:700; font-size:16px; dominant-baseline:middle; text-anchor:middle; user-select:none; pointer-events:none }
+  #bit{ cursor:pointer }
+  #bit:focus-visible .bit-rect{ stroke: color-mix(in srgb, var(--text) 40%, transparent); stroke-width:3 }
+  /* apply same focus to all bit groups */
+  .bit{ cursor:pointer }
+  .bit:focus-visible .bit-rect{ stroke: color-mix(in srgb, var(--text) 40%, transparent); stroke-width:3 }
+  .gate-rect{ fill: var(--panel); stroke: var(--border) }
+  .gate-label{ font-weight:700; font-size:12px; dominant-baseline:middle; text-anchor:middle; user-select:none; pointer-events:none }
+  /* shaped gate outlines */
+  .gate-shape{ stroke: var(--border); stroke-width:2; fill:none }
+  /* short port stubs drawn as part of the gate, sit above wires */
+  .port{ stroke: var(--border); stroke-width:3; stroke-linecap:round; fill:none; pointer-events:none }
+  .port.high{ stroke:#10b981 }
 </style>
+
+<!-- Minimal circuit viz: one Bit -> NOT gate + dangling output wire -->
+<div class="sim" aria-label="Circuit (bit → NOT gate)">
+  <svg class="circuit" viewBox="0 0 920 120" role="img" aria-labelledby="circ-title">
+    <title id="circ-title">Minimal circuit: one bit feeding a NOT gate; output wire unconnected</title>
+    <!-- wire from bit to NOT input -->
+    <line id="wire-in" class="wire" x1="96" y1="54" x2="192" y2="54"></line>
+
+    <!-- Bit switch -->
+    <g id="bit" tabindex="0" aria-label="Bit switch (click or press Space/Enter to toggle)">
+      <rect class="bit-rect" x="24" y="30" rx="8" ry="8" width="64" height="48"></rect>
+      <text id="bit-text" class="bit-label" x="56" y="54">0</text>
+      <!-- output node -->
+      <circle id="bit-out" class="node" cx="92" cy="54" r="4"></circle>
+    </g>
+
+    <circle id="not-in" class="node" cx="196" cy="54" r="4"></circle>
+
+    <!-- output wire (unconnected) -->
+    <line id="wire-out" class="wire" x1="250" y1="54" x2="355" y2="54"></line>
+
+    <!-- NOT gate (triangle + bubble) -->
+    <g id="not" aria-label="NOT gate (inverter)">
+      <polygon points="196,30 196,78 240,54" fill="none" style="stroke: var(--border); stroke-width:2"></polygon>
+      <!-- stub from input pin to triangle edge -->
+      
+      <!-- bubble at output -->
+      <circle id="not-bubble" class="node" cx="245" cy="54" r="5"></circle>
+      <!-- stub from bubble to output pin -->
+      
+    </g>
+
+    <circle id="dangling" class="dangling" cx="360" cy="54" r="5"></circle>
+      
+    <!-- AND module: 2 bits -> AND -> dangling output -->
+    <!-- Inputs -->
+    <g id="bit-a1" class="bit" tabindex="0" aria-label="Bit A1 (toggle)">
+      <rect class="bit-rect" x="400" y="14" rx="8" ry="8" width="64" height="48"></rect>
+      <text id="bit-a1-text" class="bit-label" x="432" y="38">0</text>
+      <circle id="bit-a1-out" class="node" cx="468" cy="38" r="4"></circle>
+    </g>
+    <g id="bit-a2" class="bit" tabindex="0" aria-label="Bit A2 (toggle)">
+      <rect class="bit-rect" x="400" y="66" rx="8" ry="8" width="64" height="48"></rect>
+      <text id="bit-a2-text" class="bit-label" x="432" y="90">0</text>
+      <circle id="bit-a2-out" class="node" cx="468" cy="90" r="4"></circle>
+    </g>
+    <!-- wires to AND gate -->
+    <line id="wire-and-in1" class="wire" x1="472" y1="38" x2="528" y2="38"></line>
+    <line id="wire-and-in2" class="wire" x1="472" y1="90" x2="528" y2="90"></line>
+    <circle id="and-in1" class="node" cx="532" cy="38" r="4"></circle>
+    <circle id="and-in2" class="node" cx="532" cy="90" r="4"></circle>
+
+    <!-- AND gate rectangle -->
+    <g id="and" aria-label="AND gate">
+      <!-- AND: classic D with straight top/bottom, flat left, semicircle right -->
+      <path class="gate-shape" d="M532 30 H568 A36 36 0 0 1 568 102 H532 Z"/>
+      <!-- input stubs into the gate body -->
+      
+      
+      <!-- output stub from gate to output pin -->
+      
+    </g>
+    <!-- AND output -->
+    <circle id="and-out" class="node" cx="604" cy="66" r="4"></circle>
+    <line id="wire-and-out" class="wire" x1="608" y1="66" x2="675" y2="66"></line>
+    <circle id="dangling-and" class="dangling" cx="680" cy="66" r="5"></circle>
+
+    <!-- OR module: 2 bits -> OR -> dangling output -->
+    <!-- Inputs -->
+    <g id="bit-o1" class="bit" tabindex="0" aria-label="Bit O1 (toggle)">
+      <rect class="bit-rect" x="720" y="14" rx="8" ry="8" width="64" height="48"></rect>
+      <text id="bit-o1-text" class="bit-label" x="752" y="38">0</text>
+      <circle id="bit-o1-out" class="node" cx="788" cy="38" r="4"></circle>
+    </g>
+    <g id="bit-o2" class="bit" tabindex="0" aria-label="Bit O2 (toggle)">
+      <rect class="bit-rect" x="720" y="66" rx="8" ry="8" width="64" height="48"></rect>
+      <text id="bit-o2-text" class="bit-label" x="752" y="90">0</text>
+      <circle id="bit-o2-out" class="node" cx="788" cy="90" r="4"></circle>
+    </g>
+    <!-- wires to OR gate -->
+    <line id="wire-or-in1" class="wire" x1="792" y1="38" x2="828" y2="38"></line>
+    <line id="wire-or-in2" class="wire" x1="792" y1="90" x2="828" y2="90"></line>
+    <circle id="or-in1" class="node" cx="832" cy="38" r="4"></circle>
+    <circle id="or-in2" class="node" cx="832" cy="90" r="4"></circle>
+
+    <!-- OR gate rectangle -->
+    <g id="or" aria-label="OR gate">
+      <!-- OR: convex front to output, concave back -->
+      <path class="gate-shape" d="M828 30 C 852 30, 888 42, 900 66 C 888 90, 852 102, 828 102 C 840 86, 840 46, 828 30"/>
+      <!-- input stubs into the gate body -->
+      
+      
+      <!-- output stub from gate to output pin -->
+      
+    </g>
+    <!-- OR output -->
+    <circle id="or-out" class="node" cx="900" cy="66" r="4"></circle>
+    <line id="wire-or-out" class="wire" x1="904" y1="66" x2="905" y2="66"></line>
+    <circle id="dangling-or" class="dangling" cx="910" cy="66" r="5"></circle>
+  </svg>
+</div>
 
 <main class="card" role="main">
   <header>
@@ -120,9 +243,9 @@
   <section class="layout">
     <aside class="tabs" role="tablist" aria-label="Projects">
       <h2>Projects</h2>
-      <button class="tab" role="tab" id="tab-p1" aria-controls="panel-p1" aria-selected="true">Project 1</button>
-      <button class="tab" role="tab" id="tab-p2" aria-controls="panel-p2" aria-selected="false">Project 2</button>
-      <button class="tab" role="tab" id="tab-p3" aria-controls="panel-p3" aria-selected="false">Project 3</button>
+      <a class="tab" role="tab" id="tab-p1" href="#panel-p1" aria-controls="panel-p1" aria-selected="true">Project 1</a>
+      <a class="tab" role="tab" id="tab-p2" href="#panel-p2" aria-controls="panel-p2" aria-selected="false">Project 2</a>
+      <a class="tab" role="tab" id="tab-p3" href="#panel-p3" aria-controls="panel-p3" aria-selected="false">Project 3</a>
     </aside>
 
     <section class="panel">
@@ -184,5 +307,67 @@
     }
     window.addEventListener('hashchange', initFromHash, { passive: true });
     initFromHash();
+  })();
+</script>
+
+<script>
+  // Minimal circuit logic: Bit->NOT, two 2-input modules (AND, OR)
+  (function(){
+    const $ = (id) => document.getElementById(id);
+
+    // --- State ---
+    const vals = { 'bit':0, 'bit-a1':0, 'bit-a2':0, 'bit-o1':0, 'bit-o2':0 };
+
+    // --- Helpers ---
+    function hi(el, on){ if(el) el.classList.toggle('high', !!on); }
+    function hiIDs(ids, on){ ids.forEach(id => { const el=$(id); hi(el, on); }); }
+    function setText(id, v){ const el=$(id); if(el) el.textContent = String(v); }
+    function bindBit(groupId, textId){
+      const g = $(groupId);
+      if(!g) return;
+      g.addEventListener('click', () => { vals[groupId] ^= 1; render(); });
+      g.addEventListener('keydown', (e) => { if(e.key===' '||e.key==='Enter'){ e.preventDefault(); vals[groupId]^=1; render(); }});
+    }
+
+    // --- Bind bits ---
+    bindBit('bit', 'bit-text');
+    bindBit('bit-a1', 'bit-a1-text');
+    bindBit('bit-a2', 'bit-a2-text');
+    bindBit('bit-o1', 'bit-o1-text');
+    bindBit('bit-o2', 'bit-o2-text');
+
+    // --- Render ---
+    function render(){
+      // Update labels
+      setText('bit-text', vals['bit']);
+      setText('bit-a1-text', vals['bit-a1']);
+      setText('bit-a2-text', vals['bit-a2']);
+      setText('bit-o1-text', vals['bit-o1']);
+      setText('bit-o2-text', vals['bit-o2']);
+
+      // NOT block
+      const inNot = vals['bit'] === 1;
+      const outNot = !inNot;
+      hiIDs(['bit-out','not-in','wire-in','stub-not-in','stub-bit-out'], inNot);
+      hiIDs(['not-bubble','wire-out','stub-not-out'], outNot);
+
+      // AND block
+      const a1 = vals['bit-a1'] === 1;
+      const a2 = vals['bit-a2'] === 1;
+      const outAnd = a1 && a2;
+      hiIDs(['bit-a1-out','wire-and-in1','and-in1','stub-and-in1','stub-a1-out'], a1);
+      hiIDs(['bit-a2-out','wire-and-in2','and-in2','stub-and-in2','stub-a2-out'], a2);
+      hiIDs(['and-out','wire-and-out','stub-and-out'], outAnd);
+
+      // OR block
+      const o1 = vals['bit-o1'] === 1;
+      const o2 = vals['bit-o2'] === 1;
+      const outOr = o1 || o2;
+      hiIDs(['bit-o1-out','wire-or-in1','or-in1','stub-or-in1','stub-o1-out'], o1);
+      hiIDs(['bit-o2-out','wire-or-in2','or-in2','stub-or-in2','stub-o2-out'], o2);
+      hiIDs(['or-out','wire-or-out','stub-or-out'], outOr);
+    }
+
+    render();
   })();
 </script>
