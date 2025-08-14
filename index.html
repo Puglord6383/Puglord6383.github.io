@@ -34,197 +34,49 @@
     place-items:center;
     padding:24px;
   }
-  .card{
-    width:100%;
-    max-width:920px;
-    background:var(--panel);
-    border:1px solid var(--border);
-    border-radius:16px;
-    box-shadow:var(--shadow);
-    padding:20px;
-  }
+  .card{ width:100%; max-width:920px; background:var(--panel); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow); padding:20px }
 
-  header{
-    display:flex; align-items:center; justify-content:space-between;
-    gap:12px; padding:4px 4px 14px; border-bottom:1px dashed var(--border);
-  }
+  header{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:4px 4px 14px; border-bottom:1px dashed var(--border) }
   h1{ margin:0; font-size:clamp(22px,3.5vw,28px); font-weight:800; letter-spacing:.2px }
   .links{ display:flex; gap:10px; flex-wrap:wrap }
-  .btn{
-    appearance:none; border:1px solid var(--border); background:transparent; color:inherit;
-    padding:10px 14px; border-radius:10px; text-decoration:none; font-weight:600;
-    transition:background .15s ease, transform .06s ease, border-color .15s ease;
-  }
+  .btn{ appearance:none; border:1px solid var(--border); background:transparent; color:inherit; padding:10px 14px; border-radius:10px; text-decoration:none; font-weight:600; transition:background .15s ease, transform .06s ease, border-color .15s ease }
   .btn:hover{ background:rgba(127,127,127,.08); transform:translateY(-1px) }
 
-  .layout{
-    display:grid; gap:16px; padding-top:16px;
-    grid-template-columns: 260px 1fr;
-  }
-  @media (max-width: 740px){
-    .layout{ grid-template-columns: 1fr }
-  }
+  .layout{ display:grid; gap:16px; padding-top:16px; grid-template-columns: 260px 1fr }
+  @media (max-width: 740px){ .layout{ grid-template-columns: 1fr } }
 
-  .tabs{
-    display:flex; flex-direction:column; gap:8px;
-  }
-  .tabs h2{
-    margin:0 0 6px; font-size:14px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);
-  }
-  .tab{
-    display:flex; align-items:center; justify-content:space-between;
-    width:100%;
-    padding:12px 14px;
-    border:1px solid var(--border);
-    border-radius:10px;
-    background:transparent;
-    color:inherit;
-    text-align:left;
-    font-weight:600;
-    cursor:pointer;
-  }
-  .tab[aria-selected="true"]{
-    outline:2px solid transparent;
-    border-color:color-mix(in srgb, var(--text) 14%, transparent);
-    background:color-mix(in srgb, var(--text) 6%, transparent);
-  }
+  .tabs{ display:flex; flex-direction:column; gap:8px }
+  .tabs h2{ margin:0 0 6px; font-size:14px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--muted) }
+  .tab{ display:flex; align-items:center; justify-content:space-between; width:100%; padding:12px 14px; border:1px solid var(--border); border-radius:10px; background:transparent; color:inherit; text-align:left; font-weight:600; cursor:pointer }
+  .tab[aria-selected="true"]{ outline:2px solid transparent; border-color:color-mix(in srgb, var(--text) 14%, transparent); background:color-mix(in srgb, var(--text) 6%, transparent) }
   .tab:focus-visible{ outline:2px solid color-mix(in srgb, var(--text) 30%, transparent) }
 
-
-  .panel{
-    border:1px solid var(--border);
-    border-radius:12px;
-    padding:16px;
-    min-height:180px;
-  }
+  .panel{ border:1px solid var(--border); border-radius:12px; padding:16px; min-height:180px }
   .panel h3{ margin:0 0 6px; font-size:18px }
   .panel p{ margin:.5rem 0; color:var(--muted) }
 
-  @media (max-width:740px){
-    .tabs{ order:-1 }
-    .tab{ min-height:44px }
-  }
+  @media (max-width:740px){ .tabs{ order:-1 } .tab{ min-height:44px } }
+
   /* --- Minimal circuit sim styles --- */
   .sim{ width:100%; max-width:920px; margin-bottom:16px }
-  .circuit{ width:100%; height:120px; display:block }
-  .wire{ stroke: color-mix(in srgb, var(--text) 28%, transparent); stroke-width:3; fill:none; stroke-linecap:butt }
-  .wire.high{ stroke:#10b981 }
+  .circuit{ width:100%; height:560px; display:block }
+  .wire{ stroke: var(--wire, color-mix(in srgb, var(--text) 28%, transparent)); stroke-width:3; fill:none; stroke-linecap:butt }
+  .wire.high{ stroke: var(--wire-hi, #10b981) }
   .node{ fill: color-mix(in srgb, var(--text) 28%, transparent) }
-  .node.high{ fill:#10b981 }
-  .dangling{ fill:none; stroke: color-mix(in srgb, var(--text) 28%, transparent); stroke-width:2 }
+  .node.high{ fill: var(--wire-hi, #10b981) }
+  .dangling{ fill:none; stroke: var(--wire, color-mix(in srgb, var(--text) 28%, transparent)); stroke-width:2 }
   .bit-rect{ fill: var(--panel); stroke: var(--border) }
   .bit-label{ font-weight:700; font-size:16px; dominant-baseline:middle; text-anchor:middle; user-select:none; pointer-events:none }
-  #bit{ cursor:pointer }
-  #bit:focus-visible .bit-rect{ stroke: color-mix(in srgb, var(--text) 40%, transparent); stroke-width:3 }
-  /* apply same focus to all bit groups */
   .bit{ cursor:pointer }
   .bit:focus-visible .bit-rect{ stroke: color-mix(in srgb, var(--text) 40%, transparent); stroke-width:3 }
-  .gate-rect{ fill: var(--panel); stroke: var(--border) }
-  .gate-label{ font-weight:700; font-size:12px; dominant-baseline:middle; text-anchor:middle; user-select:none; pointer-events:none }
   /* shaped gate outlines */
   .gate-shape{ stroke: var(--border); stroke-width:2; fill:none }
-  /* short port stubs drawn as part of the gate, sit above wires */
-  .port{ stroke: var(--border); stroke-width:3; stroke-linecap:round; fill:none; pointer-events:none }
-  .port.high{ stroke:#10b981 }
 </style>
 
-<!-- Minimal circuit viz: one Bit -> NOT gate + dangling output wire -->
-<div class="sim" aria-label="Circuit (bit → NOT gate)">
-  <svg class="circuit" viewBox="0 0 920 120" role="img" aria-labelledby="circ-title">
-    <!-- wire from bit to NOT input -->
-    <line id="wire-in" class="wire" x1="96" y1="54" x2="192" y2="54"></line>
-
-    <!-- Bit switch -->
-    <g id="bit" tabindex="0" aria-label="">
-      <rect class="bit-rect" x="24" y="30" rx="8" ry="8" width="64" height="48"></rect>
-      <text id="bit-text" class="bit-label" x="56" y="54">0</text>
-      <!-- output node -->
-      <circle id="bit-out" class="node" cx="92" cy="54" r="4"></circle>
-    </g>
-
-    <circle id="not-in" class="node" cx="196" cy="54" r="4"></circle>
-
-    <!-- output wire (unconnected) -->
-    <line id="wire-out" class="wire" x1="250" y1="54" x2="355" y2="54"></line>
-
-    <!-- NOT gate (triangle + bubble) -->
-    <g id="not" aria-label="NOT gate (inverter)">
-      <polygon points="196,30 196,78 240,54" fill="none" style="stroke: var(--border); stroke-width:2"></polygon>
-      <!-- stub from input pin to triangle edge -->
-      
-      <!-- bubble at output -->
-      <circle id="not-bubble" class="node" cx="245" cy="54" r="5"></circle>
-      <!-- stub from bubble to output pin -->
-      
-    </g>
-
-    <circle id="dangling" class="dangling" cx="360" cy="54" r="5"></circle>
-      
-    <!-- AND module: 2 bits -> AND -> dangling output -->
-    <!-- Inputs -->
-    <g id="bit-a1" class="bit" tabindex="0" aria-label="Bit A1 (toggle)">
-      <rect class="bit-rect" x="400" y="14" rx="8" ry="8" width="64" height="48"></rect>
-      <text id="bit-a1-text" class="bit-label" x="432" y="38">0</text>
-      <circle id="bit-a1-out" class="node" cx="468" cy="38" r="4"></circle>
-    </g>
-    <g id="bit-a2" class="bit" tabindex="0" aria-label="Bit A2 (toggle)">
-      <rect class="bit-rect" x="400" y="66" rx="8" ry="8" width="64" height="48"></rect>
-      <text id="bit-a2-text" class="bit-label" x="432" y="90">0</text>
-      <circle id="bit-a2-out" class="node" cx="468" cy="90" r="4"></circle>
-    </g>
-    <!-- wires to AND gate -->
-    <line id="wire-and-in1" class="wire" x1="472" y1="38" x2="528" y2="38"></line>
-    <line id="wire-and-in2" class="wire" x1="472" y1="90" x2="528" y2="90"></line>
-    <circle id="and-in1" class="node" cx="532" cy="38" r="4"></circle>
-    <circle id="and-in2" class="node" cx="532" cy="90" r="4"></circle>
-
-    <!-- AND gate rectangle -->
-    <g id="and" aria-label="AND gate">
-      <!-- AND: classic D with straight top/bottom, flat left, semicircle right -->
-      <path class="gate-shape" d="M532 30 H568 A36 36 0 0 1 568 102 H532 Z"/>
-      <!-- input stubs into the gate body -->
-      
-      
-      <!-- output stub from gate to output pin -->
-      
-    </g>
-    <!-- AND output -->
-    <circle id="and-out" class="node" cx="604" cy="66" r="4"></circle>
-    <line id="wire-and-out" class="wire" x1="608" y1="66" x2="675" y2="66"></line>
-    <circle id="dangling-and" class="dangling" cx="680" cy="66" r="5"></circle>
-
-    <!-- OR module: 2 bits -> OR -> dangling output -->
-    <!-- Inputs -->
-    <g id="bit-o1" class="bit" tabindex="0" aria-label="Bit O1 (toggle)">
-      <rect class="bit-rect" x="720" y="14" rx="8" ry="8" width="64" height="48"></rect>
-      <text id="bit-o1-text" class="bit-label" x="752" y="38">0</text>
-      <circle id="bit-o1-out" class="node" cx="788" cy="38" r="4"></circle>
-    </g>
-    <g id="bit-o2" class="bit" tabindex="0" aria-label="Bit O2 (toggle)">
-      <rect class="bit-rect" x="720" y="66" rx="8" ry="8" width="64" height="48"></rect>
-      <text id="bit-o2-text" class="bit-label" x="752" y="90">0</text>
-      <circle id="bit-o2-out" class="node" cx="788" cy="90" r="4"></circle>
-    </g>
-    <!-- wires to OR gate -->
-    <line id="wire-or-in1" class="wire" x1="792" y1="38" x2="828" y2="38"></line>
-    <line id="wire-or-in2" class="wire" x1="792" y1="90" x2="828" y2="90"></line>
-    <circle id="or-in1" class="node" cx="832" cy="38" r="4"></circle>
-    <circle id="or-in2" class="node" cx="832" cy="90" r="4"></circle>
-
-    <!-- OR gate rectangle -->
-    <g id="or" aria-label="OR gate">
-      <!-- OR: convex front to output, concave back -->
-      <path class="gate-shape" d="M828 30 C 852 30, 888 42, 900 66 C 888 90, 852 102, 828 102 C 840 86, 840 46, 828 30"/>
-      <!-- input stubs into the gate body -->
-      
-      
-      <!-- output stub from gate to output pin -->
-      
-    </g>
-    <!-- OR output -->
-    <circle id="or-out" class="node" cx="900" cy="66" r="4"></circle>
-    <line id="wire-or-out" class="wire" x1="904" y1="66" x2="905" y2="66"></line>
-    <circle id="dangling-or" class="dangling" cx="910" cy="66" r="5"></circle>
+<!-- Canvas for circuits (left empty; user builds via API) -->
+<div class="sim" aria-label="Circuit canvas">
+  <svg class="circuit" viewBox="0 0 1600 560" role="img" aria-labelledby="circ-title">
+    <title id="circ-title">Circuit Canvas</title>
   </svg>
 </div>
 
@@ -267,106 +119,370 @@
 </main>
 
 <script>
-  (function () {
+  (function(){
+    // Tab logic (unchanged)
     const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
     const panels = Array.from(document.querySelectorAll('[role="tabpanel"]'));
-    if (!tabs.length) return;
-
-    function activateTab(tab, setHash = true) {
-      const targetId = tab.getAttribute('aria-controls');
-      tabs.forEach(t => t.setAttribute('aria-selected', String(t === tab)));
-      panels.forEach(p => p.hidden = (p.id !== targetId));
-      if (setHash) history.replaceState(null, '', '#' + targetId);
-      tab.focus();
-    }
-
-    tabs.forEach((tab, i) => {
-      tab.addEventListener('click', () => activateTab(tab, true));
-      tab.addEventListener('keydown', (e) => {
-        const { key } = e;
-        let idx = i;
-        if (key === 'ArrowRight' || key === 'ArrowDown') { idx = (i + 1) % tabs.length; e.preventDefault(); tabs[idx].focus(); }
-        if (key === 'ArrowLeft'  || key === 'ArrowUp')   { idx = (i - 1 + tabs.length) % tabs.length; e.preventDefault(); tabs[idx].focus(); }
-        if (key === 'Home') { e.preventDefault(); tabs[0].focus(); }
-        if (key === 'End')  { e.preventDefault(); tabs[tabs.length - 1].focus(); }
-        if (key === 'Enter' || key === ' ') { e.preventDefault(); activateTab(document.activeElement, true); }
-      });
-    });
-
-    function initFromHash() {
-      const id = location.hash.slice(1);
-      const match = id && document.getElementById(id);
-      if (match && match.getAttribute('role') === 'tabpanel') {
-        const tab = document.querySelector('[aria-controls="' + id + '"]');
-        if (tab) activateTab(tab, false);
-      } else {
-        const initial = tabs.find(t => t.getAttribute('aria-selected') === 'true') || tabs[0];
-        if (initial) activateTab(initial, false);
+    if (tabs.length) {
+      function activateTab(tab, setHash = true) {
+        const targetId = tab.getAttribute('aria-controls');
+        tabs.forEach(t => t.setAttribute('aria-selected', String(t === tab)));
+        panels.forEach(p => p.hidden = (p.id !== targetId));
+        if (setHash) history.replaceState(null, '', '#' + targetId);
+        tab.focus();
       }
+      tabs.forEach((tab, i) => {
+        tab.addEventListener('click', () => activateTab(tab, true));
+        tab.addEventListener('keydown', (e) => {
+          const { key } = e; let idx = i;
+          if (key === 'ArrowRight' || key === 'ArrowDown') { idx = (i + 1) % tabs.length; e.preventDefault(); tabs[idx].focus(); }
+          if (key === 'ArrowLeft'  || key === 'ArrowUp')   { idx = (i - 1 + tabs.length) % tabs.length; e.preventDefault(); tabs[idx].focus(); }
+          if (key === 'Home') { e.preventDefault(); tabs[0].focus(); }
+          if (key === 'End')  { e.preventDefault(); tabs[tabs.length - 1].focus(); }
+          if (key === 'Enter' || key === ' ') { e.preventDefault(); activateTab(document.activeElement, true); }
+        });
+      });
+      function initFromHash(){
+        const id = location.hash.slice(1);
+        const match = id && document.getElementById(id);
+        if (match && match.getAttribute('role') === 'tabpanel') {
+          const tab = document.querySelector('[aria-controls="' + id + '"]');
+          if (tab) activateTab(tab, false);
+        } else {
+          const initial = tabs.find(t => t.getAttribute('aria-selected') === 'true') || tabs[0];
+          if (initial) activateTab(initial, false);
+        }
+      }
+      window.addEventListener('hashchange', initFromHash, { passive: true });
+      initFromHash();
     }
-    window.addEventListener('hashchange', initFromHash, { passive: true });
-    initFromHash();
   })();
 </script>
 
 <script>
-  // Minimal circuit logic: Bit->NOT, two 2-input modules (AND, OR)
+  // -------------------------
+  //  MINIMAL CIRCUIT LIBRARY
+  //  Public API = window.Circuit
+  //  Gates: BIT, AND, OR, NOT (2-input)
+  //  Wires connect by pin refs: "ID.pin"
+  // -------------------------
   (function(){
-    const $ = (id) => document.getElementById(id);
+    const svg = document.querySelector('.circuit');
+    const NS = 'http://www.w3.org/2000/svg';
 
-    // --- State ---
-    const vals = { 'bit':0, 'bit-a1':0, 'bit-a2':0, 'bit-o1':0, 'bit-o2':0 };
+    // Create layers: gates under wires, nodes above wires
+    const gWires = make('g', {id:'wires'}); svg.appendChild(gWires);
+    const gGates = make('g', {id:'gates'}); svg.appendChild(gGates);
+    const gNodes = make('g', {id:'nodes'}); svg.appendChild(gNodes);
 
-    // --- Helpers ---
-    function hi(el, on){ if(el) el.classList.toggle('high', !!on); }
-    function hiIDs(ids, on){ ids.forEach(id => { const el=$(id); hi(el, on); }); }
-    function setText(id, v){ const el=$(id); if(el) el.textContent = String(v); }
-    function bindBit(groupId, textId){
-      const g = $(groupId);
-      if(!g) return;
-      g.addEventListener('click', () => { vals[groupId] ^= 1; render(); });
-      g.addEventListener('keydown', (e) => { if(e.key===' '||e.key==='Enter'){ e.preventDefault(); vals[groupId]^=1; render(); }});
+    const R = { node:4, bubble:5 };
+    const sim = { comps:new Map(), pins:new Map(), wires:[], R, layers:{ gGates, gWires, gNodes } };
+
+    function make(tag, attrs){ const n=document.createElementNS(NS, tag); if(attrs){ for(const k in attrs) n.setAttribute(k, attrs[k]); } return n; }
+    function attr(n, attrs){ for(const k in attrs) n.setAttribute(k, attrs[k]); return n; }
+
+    // ---- Pins ----
+    function pinKey(id, name){ return `${id}.${name}`; }
+    function addPin(id, name, x, y, r=R.node){
+      const key = pinKey(id,name);
+      const circle = make('circle', { id:`pin-${id}-${name}`, class:'node', cx:x, cy:y, r });
+      gNodes.appendChild(circle);
+      const p = { id:key, x, y, r, v:0, el:circle };
+      sim.pins.set(key, p);
+      return key;
+    }
+    function getPin(ref){
+      if (!ref) throw new Error('Missing pin ref');
+      const key = typeof ref === 'string' ? ref : (ref.id || ref);
+      const p = sim.pins.get(key);
+      if (!p) throw new Error('Pin not found: ' + key);
+      return p;
     }
 
-    // --- Bind bits ---
-    bindBit('bit', 'bit-text');
-    bindBit('bit-a1', 'bit-a1-text');
-    bindBit('bit-a2', 'bit-a2-text');
-    bindBit('bit-o1', 'bit-o1-text');
-    bindBit('bit-o2', 'bit-o2-text');
+    // ---- Wires ----
+    function tangent(a, b){
+      // Return [x1,y1,x2,y2] that stop exactly at dot tangents (butt caps)
+      const dir = (b.x >= a.x) ? 1 : -1;
+      const x1 = a.x + dir * a.r;
+      const x2 = b.x - dir * b.r;
+      return [x1, a.y, x2, b.y];
+    }
+    function wirePoints(fromRef, toRef, via){
+      const a = getPin(fromRef), b = getPin(toRef);
+      const pts = [];
+      if (!via || via.length === 0){
+        const [x1,y1,x2,y2] = tangent(a,b);
+        pts.push([x1,y1],[x2,y2]);
+      } else {
+        // Tangent to first segment
+        const f = { x: via[0].x, y: via[0].y };
+        const dir1 = (f.x >= a.x) ? 1 : -1;
+        const x1 = a.x + dir1 * a.r; pts.push([x1, a.y]);
+        // Middle points
+        via.forEach(p=>pts.push([p.x,p.y]));
+        // Tangent to last segment
+        const l = via[via.length-1];
+        const dir2 = (b.x >= l.x) ? 1 : -1;
+        const x2 = b.x - dir2 * b.r; pts.push([x2, b.y]);
+      }
+      return pts;
+    }
+    function addWire(fromRef, toRef, via){
+      const pts = wirePoints(fromRef, toRef, via);
+      let el;
+      if (pts.length === 2){
+        el = make('line', { class:'wire', x1:pts[0][0], y1:pts[0][1], x2:pts[1][0], y2:pts[1][1] });
+      } else {
+        el = make('polyline', { class:'wire', points: pts.map(p=>p.join(',')).join(' ') });
+      }
+      gWires.appendChild(el);
+      const w = { from: typeof fromRef==='string'?fromRef:fromRef.id, to: typeof toRef==='string'?toRef:toRef.id, via, el };
+      sim.wires.push(w);
+      return w;
+    }
+    function addDangling(id, name, x, y, r=R.node){ return addPin(id, name, x, y, r); }
 
-    // --- Render ---
+    // ---- Gates ----
+    function addBit(id, x, y){
+      const g = make('g', { id, tabindex:0, class:'bit', 'aria-label':`Bit ${id}` });
+      const rect = make('rect', { class:'bit-rect', x, y, rx:8, ry:8, width:64, height:48 });
+      const tx = make('text', { class:'bit-label', x:x+32, y:y+24 }); tx.textContent='0';
+      const out = addPin(id, 'out', x+64+R.node, y+24, R.node);
+      g.append(rect, tx);
+      svg.appendChild(g);
+      const comp = { id, kind:'BIT', pins:{ out }, els:{ g, rect, tx }, state:{ val:0 } };
+      sim.comps.set(id, comp);
+      g.addEventListener('click', ()=>{ comp.state.val^=1; tx.textContent=String(comp.state.val); render(); });
+      g.addEventListener('keydown', (e)=>{ if(e.key===' '||e.key==='Enter'){ e.preventDefault(); comp.state.val^=1; tx.textContent=String(comp.state.val); render(); }});
+      return comp;
+    }
+    function addAND(id, x, y, s=1){
+      const w=72*s, h=72*s, r=36*s;
+      const path = make('path', { class:'gate-shape', d:`M${x} ${y} H${x+36*s} A${r} ${r} 0 0 1 ${x+36*s} ${y+h} H${x} Z` });
+      gGates.appendChild(path);
+      const inA = addPin(id,'inA', x, y+8*s, R.node);
+      const inB = addPin(id,'inB', x, y+64*s, R.node);
+      const out = addPin(id,'out', x+w, y+h/2, R.node);
+      const comp = { id, kind:'AND', pins:{ inA, inB, out }, els:{ path }, s };
+      sim.comps.set(id, comp); return comp;
+    }
+    function addOR(id, x, y, s=1){
+      const w=72*s, h=72*s;
+      const path = make('path', { class:'gate-shape', d:`M${x} ${y} C ${x+24*s} ${y}, ${x+60*s} ${y+12*s}, ${x+w} ${y+h/2} C ${x+60*s} ${y+h-12*s}, ${x+24*s} ${y+h}, ${x} ${y+h} C ${x+12*s} ${y+h-16*s}, ${x+12*s} ${y+16*s}, ${x} ${y}` });
+      gGates.appendChild(path);
+      const inA = addPin(id,'inA', x+4*s, y+8*s, R.node);
+      const inB = addPin(id,'inB', x+4*s, y+64*s, R.node);
+      const out = addPin(id,'out', x+w, y+h/2, R.node);
+      const comp = { id, kind:'OR', pins:{ inA, inB, out }, els:{ path }, s };
+      sim.comps.set(id, comp); return comp;
+    }
+    function addNOT(id, x, y, s=1){
+      const triW=44*s, h=72*s;
+      const poly = make('polygon', { points: `${x},${y+12*s} ${x},${y+h-12*s} ${x+triW},${y+h/2}`, fill:'none', style:'stroke: var(--border); stroke-width:2' });
+      gGates.appendChild(poly);
+      const inn = addPin(id,'in', x, y+h/2, R.node);
+      const out = addPin(id,'out', x+triW+R.bubble, y+h/2, R.bubble);
+      const comp = { id, kind:'NOT', pins:{ in:inn, out }, els:{ poly }, s };
+      sim.comps.set(id, comp); return comp;
+    }
+
+    // ---- Evaluation ----
+    function clearVals(){ sim.pins.forEach(p=>p.v=0); }
+    function evalOnce(){
+      // wires propagate (fan-out allowed)
+      for(const w of sim.wires){ const a=sim.pins.get(w.from); const b=sim.pins.get(w.to); if (a && b) b.v = a.v ? 1 : 0; }
+      // gates compute
+      for(const comp of sim.comps.values()){
+        switch(comp.kind){
+          case 'BIT': sim.pins.get(comp.pins.out).v = comp.state.val ? 1 : 0; break;
+          case 'AND': {
+            const a=sim.pins.get(comp.pins.inA).v, b=sim.pins.get(comp.pins.inB).v; sim.pins.get(comp.pins.out).v = (a&&b)?1:0; break; }
+          case 'OR': {
+            const a=sim.pins.get(comp.pins.inA).v, b=sim.pins.get(comp.pins.inB).v; sim.pins.get(comp.pins.out).v = (a||b)?1:0; break; }
+          case 'NOT': {
+            const a=sim.pins.get(comp.pins.in).v; sim.pins.get(comp.pins.out).v = a?0:1; break; }
+        }
+      }
+    }
     function render(){
-      // Update labels
-      setText('bit-text', vals['bit']);
-      setText('bit-a1-text', vals['bit-a1']);
-      setText('bit-a2-text', vals['bit-a2']);
-      setText('bit-o1-text', vals['bit-o1']);
-      setText('bit-o2-text', vals['bit-o2']);
-
-      // NOT block
-      const inNot = vals['bit'] === 1;
-      const outNot = !inNot;
-      hiIDs(['bit-out','not-in','wire-in','stub-not-in','stub-bit-out'], inNot);
-      hiIDs(['not-bubble','wire-out','stub-not-out'], outNot);
-
-      // AND block
-      const a1 = vals['bit-a1'] === 1;
-      const a2 = vals['bit-a2'] === 1;
-      const outAnd = a1 && a2;
-      hiIDs(['bit-a1-out','wire-and-in1','and-in1','stub-and-in1','stub-a1-out'], a1);
-      hiIDs(['bit-a2-out','wire-and-in2','and-in2','stub-and-in2','stub-a2-out'], a2);
-      hiIDs(['and-out','wire-and-out','stub-and-out'], outAnd);
-
-      // OR block
-      const o1 = vals['bit-o1'] === 1;
-      const o2 = vals['bit-o2'] === 1;
-      const outOr = o1 || o2;
-      hiIDs(['bit-o1-out','wire-or-in1','or-in1','stub-or-in1','stub-o1-out'], o1);
-      hiIDs(['bit-o2-out','wire-or-in2','or-in2','stub-or-in2','stub-o2-out'], o2);
-      hiIDs(['or-out','wire-or-out','stub-or-out'], outOr);
+      clearVals();
+      // prime seeds: bit sources
+      for(const comp of sim.comps.values()) if(comp.kind==='BIT') sim.pins.get(comp.pins.out).v = comp.state.val?1:0;
+      // settle a few rounds (acyclic combinational)
+      for(let i=0;i<6;i++) evalOnce();
+      // visuals
+      sim.pins.forEach(p=> p.el.classList.toggle('high', !!p.v));
+      for(const w of sim.wires){ const a=sim.pins.get(w.from); w.el.classList.toggle('high', !!(a&&a.v)); }
     }
 
-    render();
+    // ---- Declarative builder (for you) ----
+    function build(spec){
+      // spec = { nodes:[{kind,id,x,y}], wires:[[from,to,via?], ...] }
+      if(spec.nodes){
+        for(const n of spec.nodes){
+          switch(n.kind){
+            case 'BIT': addBit(n.id, n.x, n.y); break;
+            case 'AND': addAND(n.id, n.x, n.y); break;
+            case 'OR' : addOR(n.id, n.x, n.y); break;
+            case 'NOT': addNOT(n.id, n.x, n.y); break;
+          }
+        }
+      }
+      if(spec.wires){
+        for(const w of spec.wires){ addWire(w[0], w[1], w[2]); }
+      }
+      render();
+      return api;
+    }
+
+    function clear(){
+      // remove all svg children from layers and reset maps
+      [gGates,gWires,gNodes].forEach(g=>{ while(g.firstChild) g.removeChild(g.firstChild); });
+      sim.comps.clear(); sim.pins.clear(); sim.wires.length = 0;
+    }
+
+    function label(text, x, y){ const t=make('text',{class:'bit-label', x, y}); t.textContent=text; svg.appendChild(t); return t; }
+    function setBit(id, v){ const c=sim.comps.get(id); if(c&&c.kind==='BIT'){ c.state.val = v?1:0; c.els.tx.textContent=String(c.state.val); render(); }}
+    function get(ref){ return getPin(ref); }
+
+    // Public API
+    const api = window.Circuit = {
+      // low-level
+      addBit, addAND, addOR, addNOT, addDangling, addWire, label,
+      // declarative
+      build, clear,
+      // helpers
+      pin: get, setBit, render,
+      // internals (exposed for power users)
+      _sim: sim
+    };
+  })();
+</script>
+
+<script>
+  // Six-line setup with clean input rails (20px apart) — no XOR yet.
+  // Rails: A,B,C,D vertical buses; each rail ends at its topmost/bottommost tap.
+  (function(){
+    if(!window.Circuit) return; const C = window.Circuit; C.clear();
+    const S = 0.75; // compact gate size
+
+    // --- Inputs stacked on the left ---
+    C.addBit('A', 88, 164); // A.out y≈38
+    C.addBit('B', 88, 234); // B.out y≈188
+    C.addBit('C', 88, 310); // C.out y≈338
+    C.addBit('D', 88, 385); // D.out y≈488
+
+    // --- Gate columns ---
+    const COL = { RAIL:200, AND1:300, AND2:406, OUT:510 };
+    const RAILS = { A:COL.RAIL, B:COL.RAIL+20, C:COL.RAIL+40, D:COL.RAIL+60 };
+
+    // Internal bookkeeping for rail extents & decorative rail lines
+    const taps = { A:[C._sim.pins.get('A.out').y], B:[C._sim.pins.get('B.out').y], C:[C._sim.pins.get('C.out').y], D:[C._sim.pins.get('D.out').y] };
+    const railEls = [];
+
+    // Helper: orthogonal feed from SOURCE PIN (A/B/C/D) via its rail to a DEST PIN
+    function feedFrom(sig, srcRef, destPin){
+      const src = C._sim.pins.get(srcRef); const dst = C._sim.pins.get(destPin);
+      const rx = RAILS[sig];
+      taps[sig].push(dst.y);
+      const approachX = dst.x - dst.r - 6; // ensure last hop is horizontal
+      C.addWire(srcRef, destPin, [ {x:rx, y:src.y}, {x:rx, y:dst.y}, {x:approachX, y:dst.y} ]);
+    }
+
+    // Helper: orthogonal run between two gate pins
+    function run(fromRef, toRef, xMid){
+      const a = C._sim.pins.get(fromRef), b = C._sim.pins.get(toRef);
+      const xm = xMid ?? Math.min(a.x,b.x) + 40;
+      const approachX = b.x - b.r - 6;
+      C.addWire(fromRef, toRef, [ {x:xm, y:a.y}, {x:xm, y:b.y}, {x:approachX, y:b.y} ]);
+    }
+
+    // Helper: draw decorative vertical rail and keep it highlighted with the source bit
+    function drawRails(){
+      const svg = document.querySelector('.circuit');
+      const NS = 'http://www.w3.org/2000/svg';
+      function make(tag, attrs){ const n=document.createElementNS(NS, tag); for(const k in attrs) n.setAttribute(k, attrs[k]); return n; }
+      const layer = svg.querySelector('#wires'); // wires layer exists
+      [['A','A.out'],['B','B.out'],['C','C.out'],['D','D.out']].forEach(([sig,srcId])=>{
+        const ys = taps[sig]; const y1 = Math.min(...ys), y2 = Math.max(...ys);
+        const x = RAILS[sig];
+        const rail = make('line', { x1:x, y1:y1, x2:x, y2:y2, class:'wire' });
+        layer.appendChild(rail);
+        railEls.push({ el: rail, src: srcId });
+      });
+      // Patch render() to also highlight rails
+      const origRender = C.render; C.render = function(){
+        if (origRender) origRender();
+        railEls.forEach(r=>{ const p=C._sim.pins.get(r.src); if(!p) return; r.el.classList.toggle('high', !!p.v); });
+      };
+    }
+
+    // --- Base ANDs ---
+    // AND1: A & C
+    const AND1 = C.addAND('AND1', COL.AND1, 160, S);
+    feedFrom('A','A.out', AND1.pins.inA);
+    feedFrom('C','C.out', AND1.pins.inB);
+
+    // AND2: B & C
+    const AND2 = C.addAND('AND2', COL.AND1, 220, S);
+    feedFrom('B','B.out', AND2.pins.inA);
+    feedFrom('C','C.out', AND2.pins.inB);
+
+    // AND3: B & D
+    const AND3 = C.addAND('AND3', COL.AND1, 280, S);
+    feedFrom('B','B.out', AND3.pins.inA);
+    feedFrom('D','D.out', AND3.pins.inB);
+
+    // AND4: A & B → AND4B with D
+    const AND4 = C.addAND('AND4', COL.AND1, 340, S);
+    feedFrom('A','A.out', AND4.pins.inA);
+    feedFrom('B','B.out', AND4.pins.inB);
+
+    const AND4B = C.addAND('AND4B', COL.AND2, 361, S);
+    run(AND4.pins.out, AND4B.pins.inA, COL.AND2-40);
+    C.addWire('D.out', AND4B.pins.inB);
+
+    // AND5: B & C → AND5B with D
+    const AND5 = C.addAND('AND5', COL.AND1, 424, S);
+    feedFrom('B','B.out', AND5.pins.inA);
+    feedFrom('C','C.out', AND5.pins.inB);
+
+    const AND5B = C.addAND('AND5B', COL.AND2, 445, S);
+    run(AND5.pins.out, AND5B.pins.inA, COL.AND2-40);
+    feedFrom('D','D.out', AND5B.pins.inB);
+
+    // Draw the rails now that all taps are known
+    drawRails();
+
+    // --- Expose the six outputs to the right (straight right from each source) ---
+    function exposeSimple(pinRef, label){
+      const p = C._sim.pins.get(pinRef);
+      const secondOutX = C._sim.pins.get(AND4B.pins.out).x; // reference = 2nd column out pin
+      const xOut = secondOutX + 50; // ~50px past 2nd column
+      const OUT = C.addDangling('OUT', label, xOut, p.y);
+      // short, equal-length stubs
+      C.addWire(pinRef, OUT, [ {x:xOut-40, y:p.y} ]);
+      
+      
+    }
+    // IN1 special route: go UP along B rail, then RIGHT above AND1
+    (function(){
+      const b = C._sim.pins.get('B.out');
+      const yAND1 = C._sim.pins.get(AND1.pins.out).y;
+      const yIN1  = yAND1 - 40; // above AND1
+      const secondOutX = C._sim.pins.get(AND4B.pins.out).x;
+      const xOut = secondOutX + 50; // unified output X
+      const OUT = C.addDangling('OUT','IN1', xOut, yIN1);
+      const xBrail = RAILS.B;
+      C.addWire('B.out', OUT, [ {x:xBrail, y:b.y}, {x:xBrail, y:yIN1}, {x:xOut-40, y:yIN1} ]);
+      
+    })();
+    exposeSimple(AND1.pins.out,'AND1');
+    exposeSimple(AND2.pins.out,'AND2');
+    exposeSimple(AND3.pins.out,'AND3');
+    exposeSimple(AND4B.pins.out,'AND4B');
+    exposeSimple(AND5B.pins.out,'AND5B');
+
+    C.render && C.render();
   })();
 </script>
