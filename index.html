@@ -187,7 +187,7 @@
       const key = pinKey(id,name);
       const circle = make('circle', { id:`pin-${id}-${name}`, class:'node', cx:x, cy:y, r });
       gNodes.appendChild(circle);
-      const p = { id:key, x, y, r, v:0, el:circle };
+      const p = { id:key, x, y, r, v:0, dr:false, el:circle };
       sim.pins.set(key, p);
       return key;
     }
@@ -210,20 +210,44 @@
     function wirePoints(fromRef, toRef, via){
       const a = getPin(fromRef), b = getPin(toRef);
       const pts = [];
+      // No vias → draw a single straight horizontal OR vertical segment with tangent offsets
       if (!via || via.length === 0){
-        const [x1,y1,x2,y2] = tangent(a,b);
-        pts.push([x1,y1],[x2,y2]);
+        if (Math.abs(a.x - b.x) < 1e-6){
+          // vertical
+          const dirY = (b.y >= a.y) ? 1 : -1;
+          const y1 = a.y + dirY * a.r;
+          const y2 = b.y - dirY * b.r;
+          pts.push([a.x, y1], [b.x, y2]);
+        } else {
+          // horizontal/diagonal fallback (horizontal by construction in our use)
+          const dir = (b.x >= a.x) ? 1 : -1;
+          const x1 = a.x + dir * a.r;
+          const x2 = b.x - dir * b.r;
+          pts.push([x1, a.y], [x2, b.y]);
+        }
       } else {
-        // Tangent to first segment
+        // With vias: respect axis of first/last legs for clean tangents
         const f = { x: via[0].x, y: via[0].y };
-        const dir1 = (f.x >= a.x) ? 1 : -1;
-        const x1 = a.x + dir1 * a.r; pts.push([x1, a.y]);
-        // Middle points
+        if (Math.abs(f.x - a.x) < 1e-6){
+          // first leg vertical
+          const dirY = (f.y >= a.y) ? 1 : -1;
+          pts.push([a.x, a.y + dirY * a.r]);
+        } else {
+          // first leg horizontal
+          const dir = (f.x >= a.x) ? 1 : -1;
+          pts.push([a.x + dir * a.r, a.y]);
+        }
         via.forEach(p=>pts.push([p.x,p.y]));
-        // Tangent to last segment
         const l = via[via.length-1];
-        const dir2 = (b.x >= l.x) ? 1 : -1;
-        const x2 = b.x - dir2 * b.r; pts.push([x2, b.y]);
+        if (Math.abs(b.x - l.x) < 1e-6){
+          // last leg vertical
+          const dirY = (b.y >= l.y) ? 1 : -1;
+          pts.push([b.x, b.y - dirY * b.r]);
+        } else {
+          // last leg horizontal
+          const dir = (b.x >= l.x) ? 1 : -1;
+          pts.push([b.x - dir * b.r, b.y]);
+        }
       }
       return pts;
     }
@@ -241,6 +265,7 @@
       return w;
     }
     function addDangling(id, name, x, y, r=R.node){ return addPin(id, name, x, y, r); }
+    function addJunction(id, x, y, r=R.node){ return addPin(id, 'j', x, y, r); }
 
     // ---- Gates ----
     function addBit(id, x, y){
@@ -285,34 +310,51 @@
       const comp = { id, kind:'NOT', pins:{ in:inn, out }, els:{ poly }, s };
       sim.comps.set(id, comp); return comp;
     }
+    // Simple output display block that shows "1: Prime" or "0: Composite"
+    function addDisplay(id, x, y, w=132, h=36){
+      const g = make('g', { id, class:'display' });
+      const rect = make('rect', { class:'bit-rect', x, y, rx:8, ry:8, width:w, height:h });
+      const tx = make('text', { class:'bit-label', x: x + w/2, y: y + h/2 });
+      tx.textContent = '0: Composite';
+      const input = addPin(id, 'in', x, y + h/2, R.node);
+      g.appendChild(rect); g.appendChild(tx);
+      gGates.appendChild(g);
+      const comp = { id, kind:'DISP', pins:{ in: input }, els:{ g, rect, tx }, box:{ x, y, w, h } };
+      sim.comps.set(id, comp);
+      return comp;
+    }
 
     // ---- Evaluation ----
-    function clearVals(){ sim.pins.forEach(p=>p.v=0); }
+    function clearVals(){ sim.pins.forEach(p=>{ p.v=0; p.dr=false; }); }
     function evalOnce(){
       // wires propagate (fan-out allowed)
-      for(const w of sim.wires){ const a=sim.pins.get(w.from); const b=sim.pins.get(w.to); if (a && b) b.v = a.v ? 1 : 0; }
+      for(const w of sim.wires){ const a=sim.pins.get(w.from); const b=sim.pins.get(w.to); if (a && b){ b.v = a.v ? 1 : 0; b.dr = !!a.dr; } }
       // gates compute
       for(const comp of sim.comps.values()){
         switch(comp.kind){
-          case 'BIT': sim.pins.get(comp.pins.out).v = comp.state.val ? 1 : 0; break;
-          case 'AND': {
-            const a=sim.pins.get(comp.pins.inA).v, b=sim.pins.get(comp.pins.inB).v; sim.pins.get(comp.pins.out).v = (a&&b)?1:0; break; }
-          case 'OR': {
-            const a=sim.pins.get(comp.pins.inA).v, b=sim.pins.get(comp.pins.inB).v; sim.pins.get(comp.pins.out).v = (a||b)?1:0; break; }
-          case 'NOT': {
-            const a=sim.pins.get(comp.pins.in).v; sim.pins.get(comp.pins.out).v = a?0:1; break; }
+          case 'BIT': { const o=sim.pins.get(comp.pins.out); o.v = comp.state.val ? 1 : 0; o.dr = true; break; }
+          case 'AND': { const aP=sim.pins.get(comp.pins.inA), bP=sim.pins.get(comp.pins.inB); const o=sim.pins.get(comp.pins.out); o.v = (aP.v && bP.v) ? 1 : 0; o.dr = !!(aP.dr || bP.dr); break; }
+          case 'OR': { const aP=sim.pins.get(comp.pins.inA), bP=sim.pins.get(comp.pins.inB); const o=sim.pins.get(comp.pins.out); o.v = (aP.v || bP.v) ? 1 : 0; o.dr = !!(aP.dr || bP.dr); break; }
+          case 'NOT': { const i=sim.pins.get(comp.pins.in); const o=sim.pins.get(comp.pins.out); o.v = i.v ? 0 : 1; o.dr = !!i.dr; break; }
         }
       }
     }
     function render(){
       clearVals();
       // prime seeds: bit sources
-      for(const comp of sim.comps.values()) if(comp.kind==='BIT') sim.pins.get(comp.pins.out).v = comp.state.val?1:0;
+      for(const comp of sim.comps.values()) if(comp.kind==='BIT'){ const o=sim.pins.get(comp.pins.out); o.v = comp.state.val?1:0; o.dr = true; }
       // settle a few rounds (acyclic combinational)
-      for(let i=0;i<6;i++) evalOnce();
+      for (let i=0;i<16;i++) evalOnce();
       // visuals
-      sim.pins.forEach(p=> p.el.classList.toggle('high', !!p.v));
-      for(const w of sim.wires){ const a=sim.pins.get(w.from); w.el.classList.toggle('high', !!(a&&a.v)); }
+      sim.pins.forEach(p=> p.el.classList.toggle('high', !!(p.v && p.dr))); 
+      for(const w of sim.wires){ const a=sim.pins.get(w.from); w.el.classList.toggle('high', !!(a && a.v && a.dr)); }
+      // update display blocks
+      for(const comp of sim.comps.values()){
+        if (comp.kind==='DISP'){
+          const v = sim.pins.get(comp.pins.in).v ? 1 : 0;
+          comp.els.tx.textContent = v ? '1: Prime' : '0: Composite';
+        }
+      }
     }
 
     // ---- Declarative builder (for you) ----
@@ -348,7 +390,7 @@
     // Public API
     const api = window.Circuit = {
       // low-level
-      addBit, addAND, addOR, addNOT, addDangling, addWire, label,
+      addBit, addAND, addOR, addNOT, addDangling, addJunction, addWire, label, addDisplay,
       // declarative
       build, clear,
       // helpers
@@ -356,6 +398,7 @@
       // internals (exposed for power users)
       _sim: sim
     };
+
   })();
 </script>
 
@@ -438,7 +481,7 @@
     feedFrom('A','A.out', AND4.pins.inA);
     feedFrom('B','B.out', AND4.pins.inB);
 
-    const AND4B = C.addAND('AND4B', COL.AND2, 361, S);
+    const AND4B = C.addAND('AND4B', COL.AND2 - 20, 361, S);
     run(AND4.pins.out, AND4B.pins.inA, COL.AND2-40);
     C.addWire('D.out', AND4B.pins.inB);
 
@@ -447,7 +490,7 @@
     feedFrom('B','B.out', AND5.pins.inA);
     feedFrom('C','C.out', AND5.pins.inB);
 
-    const AND5B = C.addAND('AND5B', COL.AND2, 445, S);
+    const AND5B = C.addAND('AND5B', COL.AND2 - 20, 445, S);
     run(AND5.pins.out, AND5B.pins.inA, COL.AND2-40);
     feedFrom('D','D.out', AND5B.pins.inB);
 
@@ -464,25 +507,360 @@
       C.addWire(pinRef, OUT, [ {x:xOut-40, y:p.y} ]);
       
       
-    }
-    // IN1 special route: go UP along B rail, then RIGHT above AND1
+    }// --- XOR stage setup: NOTs tacked to IN1 and AND1 lines, behind-nodes only, no extra dots ---
     (function(){
-      const b = C._sim.pins.get('B.out');
-      const yAND1 = C._sim.pins.get(AND1.pins.out).y;
-      const yIN1  = yAND1 - 40; // above AND1
-      const secondOutX = C._sim.pins.get(AND4B.pins.out).x;
-      const xOut = secondOutX + 50; // unified output X
-      const OUT = C.addDangling('OUT','IN1', xOut, yIN1);
-      const xBrail = RAILS.B;
-      C.addWire('B.out', OUT, [ {x:xBrail, y:b.y}, {x:xBrail, y:yIN1}, {x:xOut-40, y:yIN1} ]);
-      
-    })();
-    exposeSimple(AND1.pins.out,'AND1');
-    exposeSimple(AND2.pins.out,'AND2');
-    exposeSimple(AND3.pins.out,'AND3');
-    exposeSimple(AND4B.pins.out,'AND4B');
-    exposeSimple(AND5B.pins.out,'AND5B');
+      const S = 0.75, h = 72*S; // NOT height ≈54
+      const pin = r=>C._sim.pins.get(r);
 
-    C.render && C.render();
+      // Determine IN1 tap (40px above AND1 output along B rail)
+      const yAND1 = pin(AND1.pins.out).y;
+      const SHIFT = 40;
+      const yIN1 = yAND1 - 40 - SHIFT;
+
+      // Place NOTs to the right of second column outputs in a consistent column
+      const xNot = COL.AND2 + 120;
+
+      // --- NOT for IN1 ---
+      const N_IN1 = C.addNOT('X1_NOT_IN1', xNot, yIN1 - h/2, S);
+      // Required behind-node 30px left of this NOT
+      const TOP_BEHIND = C.addJunction('X1_TOP_BEHIND', xNot - 30, yIN1);
+      // Route B.out up the B rail INTO the behind node, then into the NOT
+      const b = pin('B.out');
+      const pTop = pin(TOP_BEHIND);
+      C.addWire('B.out', TOP_BEHIND, [ {x:RAILS.B, y:b.y}, {x:RAILS.B, y:yIN1}, {x:pTop.x, y:yIN1} ]);
+      C.addWire(TOP_BEHIND, N_IN1.pins.in, [ {x:xNot-6, y:yIN1} ]);
+      
+
+      // --- NOT for AND1 ---
+      const yA1 = yAND1 - SHIFT;
+      const N_A1 = C.addNOT('X1_NOT_A1', xNot, yA1 - h/2, S);
+      C.addWire(AND1.pins.out, N_A1.pins.in, [ {x:xNot-6, y:yA1} ]);
+      // Required behind-node 60px left of this NOT (no wire to it yet)
+      const BOT_BEHIND = C.addJunction('X1_BOT_BEHIND', xNot - 60, yA1);
+
+      // --- Two ANDs aligned to the NOT outputs ---
+      const out1 = pin(N_IN1.pins.out); // yIN1
+      const out2 = pin(N_A1.pins.out);  // yA1
+
+      const topANDx = out1.x + 30;           // ~30px horizontal after NOT
+      const topANDy = out1.y - 64*S;         // so inB aligns to out1.y
+      const X1_AND_TOP = C.addAND('X1_AND_TOP', topANDx, topANDy, S);
+      C.addWire(N_IN1.pins.out, X1_AND_TOP.pins.inB);
+
+      const botANDx = out2.x + 30;
+      const botANDy = out2.y - 8*S;          // so inA aligns to out2.y
+      const X1_AND_BOT = C.addAND('X1_AND_BOT', botANDx, botANDy, S);
+      C.addWire(N_A1.pins.out, X1_AND_BOT.pins.inA);
+
+      // TOP_BEHIND vertical down to bottom AND's bottom input
+      const xTopSpine = pin(TOP_BEHIND).x;
+      const yBotInB = pin(X1_AND_BOT.pins.inB).y;
+      const J_SPINE_BOT = C.addJunction('X1_SPINE_BOT', xTopSpine, yBotInB);
+      C.addWire(TOP_BEHIND, J_SPINE_BOT);
+      C.addWire(J_SPINE_BOT, X1_AND_BOT.pins.inB);
+
+      // Draw a vertical spine UP from the 60px-behind bottom node, and create a node aligned with the TOP AND's top input
+      const xSpine = xNot - 60;   // same x as 60px-behind node
+      const yBot   = yA1;         // bottom NOT line
+      const yTopAND = pin(X1_AND_TOP.pins.inA).y; // align with top AND's top pin
+      const J_SPINE_TOP = C.addJunction('X1_SPINE_TOP', xSpine, yTopAND);
+      // single vertical run; let wirePoints handle tangents
+      C.addWire(BOT_BEHIND, J_SPINE_TOP);
+      // feed the top AND input from the new node (rightward)
+      C.addWire(J_SPINE_TOP, X1_AND_TOP.pins.inA);
+      // OR (module 1): 20px to the right of the AND pair, L-shaped feeds
+      {
+        const oT = C._sim.pins.get(X1_AND_TOP.pins.out);
+        const oB = C._sim.pins.get(X1_AND_BOT.pins.out);
+        const S = 0.75; const mid = (oT.y + oB.y)/2; const yOr = mid - 36*S;
+        const xOr = oT.x + 20; // ~20px to the right of AND outputs
+        const X1_OR = C.addOR('X1_XOR_OR', xOr, yOr, S);
+        const iA = C._sim.pins.get(X1_OR.pins.inA);
+        const iB = C._sim.pins.get(X1_OR.pins.inB);
+        // L-shape: down/up to the OR input Y, then right into the input
+        C.addWire(X1_AND_TOP.pins.out, X1_OR.pins.inA, [ {x:oT.x, y:iA.y}, {x:iA.x-6, y:iA.y} ]);
+        C.addWire(X1_AND_BOT.pins.out, X1_OR.pins.inB, [ {x:oB.x, y:iB.y}, {x:iB.x-6, y:iB.y} ]);
+      }
+      // re-route AND1 → NOT through the behind node so the branch carries the signal
+      (function(){
+        const inRef = N_A1.pins.in;
+        for (let i = C._sim.wires.length - 1; i >= 0; i--) {
+          const w = C._sim.wires[i];
+          if (w.from === 'AND1.out' && w.to === inRef) {
+            w.el.remove();
+            C._sim.wires.splice(i,1);
+          }
+        }
+        const pAndOut = C._sim.pins.get(AND1.pins.out);
+        const pBotJ  = C._sim.pins.get(BOT_BEHIND);
+        // L-shape: go UP 40px, then RIGHT into the behind node (no diagonal)
+        C.addWire(AND1.pins.out, BOT_BEHIND, [
+          { x: pAndOut.x, y: pAndOut.y - 40 },
+          { x: pBotJ.x,   y: pAndOut.y - 40 }
+        ]);
+        C.addWire(BOT_BEHIND, inRef);
+      })();
+    })();
+
+    // --- XOR Module 2: AND2 (top) XOR AND3 (bottom) ---
+    (function(){
+      const S = 0.75, h = 72*S; const pin = r=>C._sim.pins.get(r);
+      const xNot = COL.AND2 + 120;
+      const topRef = AND2.pins.out, botRef = AND3.pins.out;
+      const pTop = pin(topRef), pBot = pin(botRef); if(!pTop || !pBot) { C.render && C.render(); return; }
+
+      // NOTs placed in the same x column — match Module 1 NOT spacing (≈ 40px apart)
+      let sep1 = 40; // default to module-1 spacing
+      const pM1a = C._sim.pins.get('X1_NOT_A1.in');
+      const pM1b = C._sim.pins.get('X1_NOT_IN1.in');
+      if (pM1a && pM1b) sep1 = Math.abs(pM1a.y - pM1b.y);
+      const mid2 = (pTop.y + pBot.y) / 2;
+      const yTopT = mid2 - sep1/2;
+      const yBotT = mid2 + sep1/2;
+
+      // Top NOT and 30px-behind node
+      const N2_TOP = C.addNOT('X2_NOT_TOP', xNot, yTopT - h/2, S);
+      const TOP2 = C.addJunction('X2_TOP_BEHIND', xNot - 30, yTopT);
+      // Bend directly from AND2.out: vertical to yTopT, then right into the behind node
+      C.addWire(topRef, TOP2, [ {x: pin(topRef).x, y: yTopT}, {x:xNot-30, y:yTopT} ]);
+      C.addWire(TOP2, N2_TOP.pins.in, [ {x:xNot-6, y:yTopT} ]);
+
+      // Bottom NOT and 60px-behind node
+      const N2_BOT = C.addNOT('X2_NOT_BOT', xNot, yBotT - h/2, S);
+      const BOT2 = C.addJunction('X2_BOT_BEHIND', xNot - 60, yBotT);
+      // Bend directly from AND3.out: vertical to yBotT, then right into the behind node
+      C.addWire(botRef, BOT2, [ {x: pin(botRef).x, y: yBotT}, {x:xNot-60, y:yBotT} ]);
+      C.addWire(BOT2, N2_BOT.pins.in, [ {x:xNot-6, y:yBotT} ]);
+
+      // ANDs aligned for perfect horizontals from NOT outputs
+      const oTop = pin(N2_TOP.pins.out), oBot = pin(N2_BOT.pins.out);
+      const X2_AND_TOP = C.addAND('X2_AND_TOP', oTop.x + 30, oTop.y - 64*S, S);
+      const X2_AND_BOT = C.addAND('X2_AND_BOT', oBot.x + 30, oBot.y - 8*S,  S);
+      C.addWire(N2_TOP.pins.out, X2_AND_TOP.pins.inB);
+      C.addWire(N2_BOT.pins.out, X2_AND_BOT.pins.inA);
+
+      // Spines: bottom behind-node up to top AND (inA), and top behind-node down to bottom AND (inB)
+      // Spines without extra nodes (only the 30/60px behind-NOT dots remain)
+      C.addWire(BOT2, X2_AND_TOP.pins.inA, [
+        { x: xNot - 60, y: C._sim.pins.get(BOT2).y },
+        { x: xNot - 60, y: C._sim.pins.get(X2_AND_TOP.pins.inA).y }
+      ]);
+      C.addWire(TOP2, X2_AND_BOT.pins.inB, [
+        { x: xNot - 30, y: C._sim.pins.get(TOP2).y },
+        { x: xNot - 30, y: C._sim.pins.get(X2_AND_BOT.pins.inB).y }
+      ]);
+      // OR (module 2): 20px to the right of the AND pair, L-shaped feeds
+      {
+        const oT = C._sim.pins.get(X2_AND_TOP.pins.out);
+        const oB = C._sim.pins.get(X2_AND_BOT.pins.out);
+        const S = 0.75; const mid = (oT.y + oB.y)/2; const yOr = mid - 36*S;
+        const xOr = oT.x + 20;
+        const X2_OR = C.addOR('X2_XOR_OR', xOr, yOr, S);
+        const iA = C._sim.pins.get(X2_OR.pins.inA);
+        const iB = C._sim.pins.get(X2_OR.pins.inB);
+        C.addWire(X2_AND_TOP.pins.out, X2_OR.pins.inA, [ {x:oT.x, y:iA.y}, {x:iA.x-6, y:iA.y} ]);
+        C.addWire(X2_AND_BOT.pins.out, X2_OR.pins.inB, [ {x:oB.x, y:iB.y}, {x:iB.x-6, y:iB.y} ]);
+      }
+    })();
+    // --- XOR Module 12: OR1 (top) XOR OR2 (bottom) ---
+    (function(){
+      const S = 0.75, h = 72*S; const pin = r=>C._sim.pins.get(r);
+      // Get the two module OR outputs
+      const OR1 = C._sim.comps.get('X1_XOR_OR');
+      const OR2 = C._sim.comps.get('X2_XOR_OR');
+      if(!OR1 || !OR2){ return; }
+      const pO1 = pin(OR1.pins.out), pO2 = pin(OR2.pins.out);
+
+      // Match module-1 NOT separation (~40px)
+      let sep = 40; const pM1a = C._sim.pins.get('X1_NOT_A1.in'), pM1b = C._sim.pins.get('X1_NOT_IN1.in');
+      if (pM1a && pM1b) sep = Math.abs(pM1a.y - pM1b.y);
+
+      // Choose NOT input Ys so the vertical legs from each OR output are equal length
+      const delta = pO2.y - pO1.y; // distance between source lines
+      const L = Math.max(0, (delta - sep)/2);
+      const yTopT = pO1.y + L;     // move down from top by L
+      const yBotT = pO2.y - L;     // move up from bottom by L
+
+      // Place the new NOTs in a fresh column to the right of both ORs
+      const xNot = Math.max(pO1.x, pO2.x) + 110;
+      const N12_TOP = C.addNOT('X12_NOT_TOP', xNot, yTopT - h/2, S);
+      const TOP12 = C.addJunction('X12_TOP_BEHIND', xNot - 30, yTopT);
+      C.addWire(OR1.pins.out, TOP12, [ {x:pO1.x, y:yTopT}, {x:xNot-30, y:yTopT} ]);
+      C.addWire(TOP12, N12_TOP.pins.in, [ {x:xNot-6, y:yTopT} ]);
+
+      const N12_BOT = C.addNOT('X12_NOT_BOT', xNot, yBotT - h/2, S);
+      const BOT12 = C.addJunction('X12_BOT_BEHIND', xNot - 60, yBotT);
+      C.addWire(OR2.pins.out, BOT12, [ {x:pO2.x, y:yBotT}, {x:xNot-60, y:yBotT} ]);
+      C.addWire(BOT12, N12_BOT.pins.in, [ {x:xNot-6, y:yBotT} ]);
+
+      // Two ANDs aligned to NOT outputs
+      const oT = pin(N12_TOP.pins.out), oB = pin(N12_BOT.pins.out);
+      const X12_AND_TOP = C.addAND('X12_AND_TOP', oT.x + 30, oT.y - 64*S, S);
+      const X12_AND_BOT = C.addAND('X12_AND_BOT', oB.x + 30, oB.y - 8*S,  S);
+      C.addWire(N12_TOP.pins.out, X12_AND_TOP.pins.inB);
+      C.addWire(N12_BOT.pins.out, X12_AND_BOT.pins.inA);
+
+      // Spines without extra nodes (only 30/60px behind-NOT dots)
+      C.addWire(BOT12, X12_AND_TOP.pins.inA, [ {x:xNot - 60, y: pin(BOT12).y }, {x:xNot - 60, y: pin(X12_AND_TOP.pins.inA).y } ]);
+      C.addWire(TOP12, X12_AND_BOT.pins.inB, [ {x:xNot - 30, y: pin(TOP12).y }, {x:xNot - 30, y: pin(X12_AND_BOT.pins.inB).y } ]);      // OR to combine the two ANDs, 20px to the right
+      {
+        const o1 = pin(X12_AND_TOP.pins.out), o2 = pin(X12_AND_BOT.pins.out);
+        const mid = (o1.y + o2.y)/2; const yOr = mid - 36*S; const xOr = o1.x + 20;
+        const X12_OR = C.addOR('X12_XOR_OR', xOr, yOr, S);
+        const iA = pin(X12_OR.pins.inA), iB = pin(X12_OR.pins.inB);
+        C.addWire(X12_AND_TOP.pins.out, X12_OR.pins.inA, [ {x:o1.x, y:iA.y}, {x:iA.x-6, y:iA.y} ]);
+        C.addWire(X12_AND_BOT.pins.out, X12_OR.pins.inB, [ {x:o2.x, y:iB.y}, {x:iB.x-6, y:iB.y} ]);
+      }
+    })();
+
+    // --- XOR Module 3: AND4B (top) XOR AND5B (bottom) ---
+    (function(){
+      const S = 0.75, h = 72*S; const pin = r=>C._sim.pins.get(r);
+      const xNot = COL.AND2 + 120;
+      const topRef = AND4B.pins.out, botRef = AND5B.pins.out;
+      const pTop = pin(topRef), pBot = pin(botRef); if(!pTop || !pBot){ C.render && C.render(); return; }
+
+      // Match NOT spacing to Module 1 (~40px apart)
+      let sep1 = 40; const pM1a = C._sim.pins.get('X1_NOT_A1.in'); const pM1b = C._sim.pins.get('X1_NOT_IN1.in');
+      if (pM1a && pM1b) sep1 = Math.abs(pM1a.y - pM1b.y);
+      const mid3 = (pTop.y + pBot.y) / 2; const yTopT = mid3 - sep1/2; const yBotT = mid3 + sep1/2;
+
+      // NOTs + behind nodes (30px for top, 60px for bottom)
+      const N3_TOP = C.addNOT('X3_NOT_TOP', xNot, yTopT - h/2, S);
+      const TOP3 = C.addJunction('X3_TOP_BEHIND', xNot - 30, yTopT);
+      C.addWire(topRef, TOP3, [ {x: pin(topRef).x, y: yTopT}, {x:xNot-30, y:yTopT} ]);
+      C.addWire(TOP3, N3_TOP.pins.in, [ {x:xNot-6, y:yTopT} ]);
+
+      const N3_BOT = C.addNOT('X3_NOT_BOT', xNot, yBotT - h/2, S);
+      const BOT3 = C.addJunction('X3_BOT_BEHIND', xNot - 60, yBotT);
+      C.addWire(botRef, BOT3, [ {x: pin(botRef).x, y: yBotT}, {x:xNot-60, y:yBotT} ]);
+      C.addWire(BOT3, N3_BOT.pins.in, [ {x:xNot-6, y:yBotT} ]);
+
+      // Two XOR ANDs aligned to NOT outputs
+      const oTop = pin(N3_TOP.pins.out), oBot = pin(N3_BOT.pins.out);
+      const X3_AND_TOP = C.addAND('X3_AND_TOP', oTop.x + 30, oTop.y - 64*S, S);
+      const X3_AND_BOT = C.addAND('X3_AND_BOT', oBot.x + 30, oBot.y - 8*S,  S);
+      C.addWire(N3_TOP.pins.out, X3_AND_TOP.pins.inB);
+      C.addWire(N3_BOT.pins.out, X3_AND_BOT.pins.inA);
+
+      // Spines without extra nodes (only the 30/60px behind-NOT dots remain)
+      C.addWire(TOP3, X3_AND_BOT.pins.inB, [
+        { x: xNot - 30, y: pin(TOP3).y },
+        { x: xNot - 30, y: pin(X3_AND_BOT.pins.inB).y }
+      ]);
+      C.addWire(BOT3, X3_AND_TOP.pins.inA, [
+        { x: xNot - 60, y: pin(BOT3).y },
+        { x: xNot - 60, y: pin(X3_AND_TOP.pins.inA).y }
+      ]);
+      // OR (module 3): 20px to the right of the AND pair, L-shaped feeds
+      {
+        const oT = C._sim.pins.get(X3_AND_TOP.pins.out);
+        const oB = C._sim.pins.get(X3_AND_BOT.pins.out);
+        const S = 0.75; const mid = (oT.y + oB.y)/2; const yOr = mid - 36*S;
+        const xOr = oT.x + 20;
+        const X3_OR = C.addOR('X3_XOR_OR', xOr, yOr, S);
+        const iA = C._sim.pins.get(X3_OR.pins.inA);
+        const iB = C._sim.pins.get(X3_OR.pins.inB);
+        C.addWire(X3_AND_TOP.pins.out, X3_OR.pins.inA, [ {x:oT.x, y:iA.y}, {x:iA.x-6, y:iA.y} ]);
+        C.addWire(X3_AND_BOT.pins.out, X3_OR.pins.inB, [ {x:oB.x, y:iB.y}, {x:iB.x-6, y:iB.y} ]);
+      }
+    })();
+
+    // --- XOR Module 23: OR2 (top, unused for now) XOR OR3 (bottom) ---
+    (function(){
+      const S = 0.75, h = 72*S; const pin = r=>C._sim.pins.get(r);
+      const OR2 = C._sim.comps.get('X2_XOR_OR');
+      const OR3 = C._sim.comps.get('X3_XOR_OR');
+      if(!OR2 || !OR3){ C.render && C.render(); return; }
+      const pO2 = pin(OR2.pins.out), pO3 = pin(OR3.pins.out);
+
+      // Use Module 1's NOT spacing (fallback 40)
+      let sep = 40; const pM1a = C._sim.pins.get('X1_NOT_A1.in'), pM1b = C._sim.pins.get('X1_NOT_IN1.in');
+      if (pM1a && pM1b) sep = Math.abs(pM1a.y - pM1b.y);
+
+      // Equalize vertical legs: choose target Ys midway so both inputs would need same L-length (top left unconnected for now)
+      const delta = pO3.y - pO2.y; const L = Math.max(0, (delta - sep)/2);
+      const yTopT = pO2.y + L; // where top input would land
+      const yBotT = pO3.y - L; // where bottom input will land
+
+      // Place NOTs midway between modules 2 & 3 (x column to the right of both ORs)
+      const xNot = Math.max(pO2.x, pO3.x) + 110;
+      const N23_TOP = C.addNOT('X23_NOT_TOP', xNot, yTopT - h/2, S);
+      const TOP23   = C.addJunction('X23_TOP_BEHIND', xNot - 30, yTopT);
+      // Top input intentionally left unconnected for now; only behind-node exists
+      
+
+      const N23_BOT = C.addNOT('X23_NOT_BOT', xNot, yBotT - h/2, S);
+      const BOT23   = C.addJunction('X23_BOT_BEHIND', xNot - 60, yBotT);
+      // Connect ONLY Module 3 output to bottom behind-node with an equal-length L-bend
+      C.addWire(OR3.pins.out, BOT23, [ {x:pO3.x, y:yBotT}, {x:xNot-60, y:yBotT} ]);
+      C.addWire(BOT23, N23_BOT.pins.in, [ {x:xNot-6, y:yBotT} ]);
+      // Ensure TOP23 feeds the top NOT (was missing)
+
+      // Connect Module 4 (X12_XOR_OR) to Module 5 top input from above (equal-leg L-bend)
+      {
+        const OR4 = C._sim.comps.get('X12_XOR_OR');
+        if (OR4){
+          const pO4 = pin(OR4.pins.out);
+          const mid0 = (pin(N23_TOP.pins.in).y + pin(N23_BOT.pins.in).y) / 2;
+          const yMid = (pO4.y + mid0) / 2;
+          const xTop = pin(TOP23).x;
+          const yTop = pin(TOP23).y;
+          // Down from OR4 to yMid, left to xTop, then down to TOP23 (no extra nodes)
+          C.addWire(OR4.pins.out, TOP23, [ {x:pO4.x, y:yMid}, {x:xTop, y:yMid}, {x:xTop, y:yTop} ]);
+          // attach TOP23 → N23_TOP after the source is connected so it's driven in the same tick
+          C.addWire(TOP23, N23_TOP.pins.in, [ {x:xNot-6, y:yTopT} ] );
+        }
+      }
+
+      // ANDs aligned to NOT outputs
+      const oT = pin(N23_TOP.pins.out), oB = pin(N23_BOT.pins.out);
+      const X23_AND_TOP = C.addAND('X23_AND_TOP', oT.x + 30, oT.y - 64*S, S);
+      const X23_AND_BOT = C.addAND('X23_AND_BOT', oB.x + 30, oB.y - 8*S,  S);
+      C.addWire(N23_TOP.pins.out, X23_AND_TOP.pins.inB);
+      C.addWire(N23_BOT.pins.out, X23_AND_BOT.pins.inA);
+
+      // Spines (only required behind nodes to the left):
+      C.addWire(BOT23, X23_AND_TOP.pins.inA, [ {x:xNot - 60, y: pin(BOT23).y }, {x:xNot - 60, y: pin(X23_AND_TOP.pins.inA).y } ]);
+      C.addWire(TOP23, X23_AND_BOT.pins.inB, [ {x:xNot - 30, y: pin(TOP23).y }, {x:xNot - 30, y: pin(X23_AND_BOT.pins.inB).y } ]);
+
+// OR to combine the two ANDs, 20px to the right
+{
+  // 1) Get the two AND outputs first
+  const o1 = pin(X23_AND_TOP.pins.out);
+  const o2 = pin(X23_AND_BOT.pins.out);
+
+  // 2) Place the OR using those positions
+  const mid = (o1.y + o2.y) / 2;
+  const yOr = mid - 36 * S;
+  const xOr = o1.x + 20;
+  const X23_OR = C.addOR('X23_XOR_OR', xOr, yOr, S);
+
+  // 3) Now get the OR inputs and wire with clean L-bends
+  const iA = pin(X23_OR.pins.inA);
+  const iB = pin(X23_OR.pins.inB);
+  C.addWire(X23_AND_TOP.pins.out, X23_OR.pins.inA, [{ x: o1.x, y: iA.y }, { x: iA.x - 6, y: iA.y }]);
+  C.addWire(X23_AND_BOT.pins.out, X23_OR.pins.inB, [{ x: o2.x, y: iB.y }, { x: iB.x - 6, y: iB.y }]);
+}
+
+    })();
+
+// === PRIME DISPLAY ===
+(function(){
+  const C   = window.Circuit; if(!C) return;
+  const sim = C._sim;
+
+  const ORf = sim.comps.get('X23_XOR_OR');   // final OR before the display
+  if(!ORf) return;
+
+  const pOut = sim.pins.get(ORf.pins.out);
+  const DISP = C.addDisplay('PRIME_DISPLAY', pOut.x + 20, pOut.y - 18, 132, 36);
+
+  // No via needed: y’s are equal, so this becomes a proper horizontal tangent
+  C.addWire(ORf.pins.out, DISP.pins.in);
+})();
+
+
+C.render && C.render();
   })();
 </script>
