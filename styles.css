@@ -1,0 +1,164 @@
+/* Base theme */
+:root{
+  --bg:#f6f7f9;
+  --panel:#ffffff;
+  --text:#111318;
+  --muted:#5b616b;
+  --border:rgba(0,0,0,.10);
+  --shadow:0 8px 24px rgba(0,0,0,.08);
+  --wire: color-mix(in srgb, var(--text) 28%, transparent);
+  --wire-hi: #10b981;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0b0c10;
+    --panel:#12131a;
+    --text:#e7e7e7;
+    --muted:#a7a7a7;
+    --border:rgba(255,255,255,.12);
+    --shadow:0 8px 28px rgba(0,0,0,.35);
+  }
+}
+
+*{ box-sizing:border-box }
+body{
+  margin:0;
+  font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100svh;
+  display:grid;
+  place-items:center;
+  padding:24px;
+}
+
+.card{
+  width:100%;
+  max-width:920px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:16px;
+  box-shadow:var(--shadow);
+  padding:20px;
+}
+
+header{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:4px 4px 14px; border-bottom:1px dashed var(--border);
+}
+h1{ margin:0; font-size:clamp(22px,3.5vw,28px); font-weight:800; letter-spacing:.2px }
+.links{ display:flex; gap:10px; flex-wrap:wrap }
+.btn{
+  appearance:none; border:1px solid var(--border); background:transparent; color:inherit;
+  padding:10px 14px; border-radius:10px; text-decoration:none; font-weight:600;
+  transition:background .15s ease, transform .06s ease, border-color .15s ease;
+}
+.btn:hover{ background:rgba(127,127,127,.08); transform:translateY(-1px) }
+
+.layout{ display:grid; gap:16px; padding-top:16px; grid-template-columns: 260px 1fr }
+@media (max-width:740px){ .layout{ grid-template-columns: 1fr } }
+
+.tabs{ display:flex; flex-direction:column; gap:8px }
+.tabs h2{
+  margin:0 0 6px; font-size:14px; font-weight:700; letter-spacing:.08em;
+  text-transform:uppercase; color:var(--muted);
+}
+.tab{
+  display:flex; align-items:center; justify-content:space-between; width:100%;
+  padding:12px 14px; border:1px solid var(--border); border-radius:10px;
+  background:transparent; color:inherit; text-align:left; font-weight:600; cursor:pointer;
+}
+.tab[aria-selected="true"]{
+  outline:2px solid transparent;
+  border-color:color-mix(in srgb, var(--text) 14%, transparent);
+  background:color-mix(in srgb, var(--text) 6%, transparent);
+}
+.tab:focus-visible{ outline:2px solid color-mix(in srgb, var(--text) 30%, transparent) }
+
+.panel{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:16px;
+  min-height:180px;
+}
+.panel h3{ margin:0 0 6px; font-size:18px }
+.panel p{ margin:.5rem 0; color:var(--muted) }
+
+@media (max-width:740px){ .tabs{ order:-1 } .tab{ min-height:44px } }
+
+/* --- Circuit container styled like a panel --- */
+.sim{
+  width:100%;
+  max-width:920px;
+  margin:8px 0 16px;
+  padding:16px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:12px;
+  box-shadow:var(--shadow);
+
+  display:grid;
+  place-items:center; /* center the SVG inside */
+}
+
+/* Don't allow text selection inside the circuit canvas */
+.sim, .sim * {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* SVG canvas – no dotted background, follows viewBox aspect ratio */
+.circuit{
+  width:100%;
+  height:auto;
+  display:block;
+  margin:0;
+
+  background:var(--panel);
+  border:none;
+  box-shadow:none;
+  border-radius:0;
+}
+
+/* Wires, nodes, gates */
+.wire{ stroke: var(--wire); stroke-width:3; fill:none; stroke-linecap:butt }
+.wire.high{ stroke: var(--wire-hi) }
+.node{ fill: color-mix(in srgb, var(--text) 28%, transparent) }
+.node.high{ fill: var(--wire-hi) }
+.bit-rect{ fill: var(--panel); stroke: var(--border) }
+.bit-label{
+  font-weight:700; font-size:16px; dominant-baseline:middle; text-anchor:middle;
+  user-select:none; pointer-events:none; fill: var(--text);
+}
+.bit{ cursor:pointer }
+.bit:hover .bit-rect{ filter: brightness(1.03) }
+.bit:focus-visible .bit-rect{ stroke: color-mix(in srgb, var(--text) 40%, transparent); stroke-width:3 }
+.gate-shape{ stroke: var(--border); stroke-width:2; fill:none }
+.gate-shape.high { stroke: var(--wire-hi); }
+/* Glow when an input bit is ON */
+.bit.active .bit-rect{
+  stroke: var(--wire-hi);
+  filter: drop-shadow(0 0 0.45rem color-mix(in srgb, var(--wire-hi) 55%, transparent));
+}
+.bit.active .bit-label{
+  fill: var(--wire-hi);
+  text-shadow: 0 0 8px color-mix(in srgb, var(--wire-hi) 60%, transparent);
+}
+
+/* Prime/Composite display highlight when active (input=1) */
+.display.active .bit-rect { stroke: var(--wire-hi); }
+.display.active .bit-label { fill: var(--wire-hi); }
+/* nice soft glow; supported in modern browsers */
+.display.active { filter: drop-shadow(0 0 6px var(--wire-hi)); }
+
+
+/* Hide inner module frame so the panel edge is the only outline */
+.module-frame{ display:none }
+
+/* Handle styles (safe even if not used) */
+.module-handle{ cursor:grab; fill:transparent }
+.module-handle:active{ cursor:grabbing }
+
+/* Keep strokes readable when scaling groups */
+.wire, .gate-shape, .bit-rect, .node { vector-effect: non-scaling-stroke; }
