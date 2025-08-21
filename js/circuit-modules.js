@@ -9,6 +9,28 @@ export function buildPrimeDemo(C){
   C.addBit('B', 88, 234); // B.out y≈188
   C.addBit('C', 88, 310); // C.out y≈338
   C.addBit('D', 88, 385); // D.out y≈488
+// === Bit legends (1 at top, 8 at bottom) ===
+{
+  const C = group; // just to match the rest of your function
+  const layer = C._groupEl.querySelector('.gates'); // put text with the gates so it scales/moves with the module
+  const svgNS = 'http://www.w3.org/2000/svg';
+
+  // End-anchored so text hugs the left edge of the bit box (bit rect x is 88)
+  const xLegend = 78; // ~10px left of the bit box
+
+  [['A','1'], ['B','2'], ['C','4'], ['D','8']].forEach(([id,label]) => {
+    const y = C.pin(`${id}.out`).y; // centerline of each bit
+    const t = document.createElementNS(svgNS, 'text');
+    t.setAttribute('x', xLegend);
+    t.setAttribute('y', y);
+    t.setAttribute('text-anchor', 'end');
+    t.setAttribute('dominant-baseline', 'middle');
+    // Inline style so you don't need to touch CSS; also ignore pointer events so clicking labels toggles the bit
+    t.setAttribute('style', 'font-weight:700; font-size:14px; fill: var(--text); pointer-events:none;');
+    t.textContent = label;
+    layer.appendChild(t);
+  });
+}
 
   // --- Gate columns (same coordinates as original) ---
   const COL   = { RAIL:200, AND1:300, AND2:406, OUT:510 };
