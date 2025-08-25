@@ -9,39 +9,6 @@ export function buildPrimeDemo(C){
   C.addBit('B', 88, 234); // B.out y≈188
   C.addBit('C', 88, 310); // C.out y≈338
   C.addBit('D', 88, 385); // D.out y≈488
-// === Bit legends (1 at top, 8 at bottom) ===
-{
-  const C = group; // same short alias you use elsewhere
-
-  // Put text on the top layer so it’s never hidden
-  const layer =
-    C._contentEl?.querySelector('.nodes') ||
-    C._groupEl.querySelector('.nodes') ||
-    C._groupEl;
-
-  const NS = 'http://www.w3.org/2000/svg';
-  const makeText = (x, y, text) => {
-    const t = document.createElementNS(NS, 'text');
-    t.setAttribute('x', x);
-    t.setAttribute('y', y);
-    t.setAttribute('text-anchor', 'end');
-    // baseline attrs for wide browser support
-    t.setAttribute('dominant-baseline', 'middle');
-    t.setAttribute('alignment-baseline', 'middle');
-    t.setAttribute('class', 'bit-legend');
-    t.textContent = text;
-    layer.appendChild(t);
-  };
-
-  // Your bit rects start at x=88, so put labels ~10px to the left
-  const xLegend = 78;
-
-  makeText(xLegend, C.pin('A.out').y, '1');
-  makeText(xLegend, C.pin('B.out').y, '2');
-  makeText(xLegend, C.pin('C.out').y, '4');
-  makeText(xLegend, C.pin('D.out').y, '8');
-}
-
 
   // --- Gate columns (same coordinates as original) ---
   const COL   = { RAIL:200, AND1:300, AND2:406, OUT:510 };
