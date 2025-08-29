@@ -10,6 +10,9 @@
 
     <!-- Card UI -->
     <main class="card" role="main">
+      <header>
+      <h1>This Website is a WIP!</h1>
+    </header>
       <section class="panel panel--circuit">
         <svg class="circuit" viewBox="0 0 1600 560" role="img" aria-labelledby="circ-title">
           <title id="circ-title">Circuit Canvas</title>
@@ -24,6 +27,7 @@
           </div>
         </nav>
       </header>
+      
 
       <section class="layout">
         <aside class="tabs" role="tablist" aria-label="Projects">
@@ -35,18 +39,28 @@
 
         <section class="panel">
           <article id="panel-p1" role="tabpanel" aria-labelledby="tab-p1">
-            <h3>Project 1</h3>
-            <p>description</p>
+            <h3>GraphUF</h3>
+            <p>•	Developed Flask web app to explore unlocks (courses depending on a given prerequisite, transitively), to supplement missing functionality in UF course catalog</p>
+            <p>•	Collaborated with two teammates using Git + GitHub, including handling merge conflicts, pull requests, and code reviews</p>
+            <p>•	Processed 8,000,000+ unique data points by scraping and cleaning UF Courses API</p>
+            <p>•	Created custom DAG with 80,000+ nodes to achieve efficient storage of prerequisite data</p>
+            <p>•	Created transitive closure map of DAG to achieve O(1) time retrieval of reachable nodes</p>
           </article>
 
           <article id="panel-p2" role="tabpanel" aria-labelledby="tab-p2" hidden>
-            <h3>Project 2</h3>
-            <p>description</p>
+            <h3>Remote LCD</h3>
+            <p>•	Connected a Raspberry Pi Zero 2W to 1602 I2C LCD to enable serial data transfer to display</p>
+            <p>•	Programmed scripts using Arduino IDE to display ASCII and custom characters on the display</p>
+            <p>•	Enabled long-distance SSH from any device using Tailscale Mesh VPN</p>
+            <p>•	Modeled and 3D printed PLA device housing to safely expose LCD and Micro USB power/data port</p>
+
           </article>
 
           <article id="panel-p3" role="tabpanel" aria-labelledby="tab-p3" hidden>
-            <h3>Project 3</h3>
-            <p>description</p>
+            <h3>Battery-Powered Remote LED Switch</h3>
+            <p>•	Used 100mAh lithium polymer battery to enable charging and discharging via USB-C</p>
+            <p>•	Optimized hibernation and duty cycles; achieved 24-hour battery life with <1s response time</p>
+            <p>•	Implemented ESP Rainmaker to enable global access to GPIO and manage Wi-Fi connectivity</p>
           </article>
         </section>
       </section>
