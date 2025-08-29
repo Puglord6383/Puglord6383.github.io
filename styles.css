@@ -87,38 +87,30 @@ h1{ margin:0; font-size:clamp(22px,3.5vw,28px); font-weight:800; letter-spacing:
 
 @media (max-width:740px){ .tabs{ order:-1 } .tab{ min-height:44px } }
 
-/* --- Circuit container styled like a panel --- */
-.sim{
-  width:100%;
-  max-width:920px;
-  margin:8px 0 16px;
-  padding:16px;
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:12px;
-  box-shadow:var(--shadow);
-
-  display:grid;
-  place-items:center; /* center the SVG inside */
+/* --- Circuit panel as a responsive ratio box --- */
+.panel--circuit{
+  position: relative;
+  padding: 0;      /* SVG will fill; no inner padding */
+  min-height: 0;   /* override .panel’s min-height */
+  overflow: hidden;
 }
-
-/* Don't allow text selection inside the circuit canvas */
-.sim, .sim * {
+.panel--circuit::before{
+  content: "";
+  display: block;
+  /* viewBox 1600×560 → 35% */
+  padding-top: calc(560 / 1600 * 100%);
+}
+.panel--circuit > .circuit{
+  position: absolute;
+  inset: 0;        /* use inset:16px if you want a gutter */
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+/* Prevent text selection inside the circuit */
+.panel--circuit, .panel--circuit * {
   -webkit-user-select: none;
   user-select: none;
-}
-
-/* SVG canvas – no dotted background, follows viewBox aspect ratio */
-.circuit{
-  width:100%;
-  height:auto;
-  display:block;
-  margin:0;
-
-  background:var(--panel);
-  border:none;
-  box-shadow:none;
-  border-radius:0;
 }
 
 /* Wires, nodes, gates */
@@ -136,6 +128,7 @@ h1{ margin:0; font-size:clamp(22px,3.5vw,28px); font-weight:800; letter-spacing:
 .bit:focus-visible .bit-rect{ stroke: color-mix(in srgb, var(--text) 40%, transparent); stroke-width:3 }
 .gate-shape{ stroke: var(--border); stroke-width:2; fill:none }
 .gate-shape.high { stroke: var(--wire-hi); }
+
 /* Glow when an input bit is ON */
 .bit.active .bit-rect{
   stroke: var(--wire-hi);
@@ -149,9 +142,7 @@ h1{ margin:0; font-size:clamp(22px,3.5vw,28px); font-weight:800; letter-spacing:
 /* Prime/Composite display highlight when active (input=1) */
 .display.active .bit-rect { stroke: var(--wire-hi); }
 .display.active .bit-label { fill: var(--wire-hi); }
-/* nice soft glow; supported in modern browsers */
 .display.active { filter: drop-shadow(0 0 6px var(--wire-hi)); }
-
 
 /* Hide inner module frame so the panel edge is the only outline */
 .module-frame{ display:none }
@@ -159,4 +150,3 @@ h1{ margin:0; font-size:clamp(22px,3.5vw,28px); font-weight:800; letter-spacing:
 /* Handle styles (safe even if not used) */
 .module-handle{ cursor:grab; fill:transparent }
 .module-handle:active{ cursor:grabbing }
-
