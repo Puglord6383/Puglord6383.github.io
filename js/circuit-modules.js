@@ -10,6 +10,15 @@ export function buildPrimeDemo(C){
   C.addBit('C', 88, 310); // C.out y≈338
   C.addBit('D', 88, 385); // D.out y≈488
 
+  const left = 76; // a bit left of the bit box (x=88 → 76 looks good)
+  C.label('1', left, C.pin('A.out').y, { anchor: 'end' });
+  C.label('2', left, C.pin('B.out').y, { anchor: 'end' });
+  C.label('4', left, C.pin('C.out').y, { anchor: 'end' });
+  C.label('8', left, C.pin('D.out').y, { anchor: 'end' });
+
+
+
+
   // --- Gate columns (same coordinates as original) ---
   const COL   = { RAIL:200, AND1:300, AND2:406, OUT:510 };
   const RAILS = { A:COL.RAIL, B:COL.RAIL+20, C:COL.RAIL+40, D:COL.RAIL+60 };

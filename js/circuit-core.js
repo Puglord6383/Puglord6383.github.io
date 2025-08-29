@@ -45,7 +45,7 @@ export class Circuit {
   createGroup(id, opts={}){
     const g = this._make('g', { id:`mod-${id}` });
     const { x=0, y=0, scale=1, showFrame=false } = opts;
-
+    
     // Content wrapper so the frame bbox ignores the frame itself
     const gContent = this._append(g, this._make('g', { class:'content' }));
 
@@ -98,7 +98,8 @@ export class Circuit {
       addJunction(localId, x, y, r){ return _addPin.call(owner, scopeId(localId), 'j', x, y, r, layers, items); },
       addWire(fromRef, toRef, via){ return _addWire.call(owner, scopeRef(fromRef), scopeRef(toRef), via, layers, items); },
       pin(ref){ return _getPin.call(owner, scopeRef(ref)); },
-
+      label(text, x, y, opts){ return _addLabel.call(owner, text, x, y, opts, layers); },
+      R: owner.R,
       onRender: (cb)=> owner.onRender(cb),
       render: ()=> owner.render(),
       _items: items,
@@ -374,4 +375,14 @@ function _addDisplay(id, x, y, w=132, h=36, layers, items){
   const comp = { id, kind:'DISP', pins:{ in: input }, els:{ g, rect, tx }, box:{ x, y, w, h } };
   this.comps.set(id, comp); if (items) items.comps.add(id);
   return comp;
+}
+
+function _addLabel(text, x, y, opts={}, layers){
+  const { anchor = 'end', className = 'bit-label' } = opts;
+  const t = this._make('text', { x, y, class: className });
+  t.textContent = text;
+  t.setAttribute('dominant-baseline', 'middle'); // vertically center like your bit digits
+  if (anchor) t.setAttribute('text-anchor', anchor); // 'end' = right-aligned → “to the left of box”
+  (layers?.gGates || this.gRoot).appendChild(t);
+  return t;
 }
