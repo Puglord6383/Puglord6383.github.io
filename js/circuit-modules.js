@@ -142,17 +142,17 @@ export function buildPrimeDemo(C){
     const X1_AND_BOT = C.addAND('X1_AND_BOT', out2.x + 30, out2.y - 8*S, S);
     C.addWire(N_A1.pins.out, X1_AND_BOT.pins.inA);
 
-    const xTopSpine = C.pin(TOP_BEHIND).x;
-    const yBotInB   = C.pin(X1_AND_BOT.pins.inB).y;
-    const J_SPINE_BOT = C.addJunction('X1_SPINE_BOT', xTopSpine, yBotInB);
-    C.addWire(TOP_BEHIND, J_SPINE_BOT);
-    C.addWire(J_SPINE_BOT, X1_AND_BOT.pins.inB);
+    C.addWire(TOP_BEHIND, X1_AND_BOT.pins.inB, [
+      { x: C.pin(TOP_BEHIND).x, y: C.pin(TOP_BEHIND).y },
+      { x: C.pin(TOP_BEHIND).x, y: C.pin(X1_AND_BOT.pins.inB).y }
+    ]);
 
-    const xSpine   = xNot - 60;
-    const yTopAND  = C.pin(X1_AND_TOP.pins.inA).y;
-    const J_SPINE_TOP = C.addJunction('X1_SPINE_TOP', xSpine, yTopAND);
-    C.addWire(BOT_BEHIND, J_SPINE_TOP);
-    C.addWire(J_SPINE_TOP, X1_AND_TOP.pins.inA);
+    C.addWire(BOT_BEHIND, X1_AND_TOP.pins.inA, [
+      { x: xNot - 60, y: C.pin(BOT_BEHIND).y },
+      { x: xNot - 60, y: C.pin(X1_AND_TOP.pins.inA).y }
+    ]);
+
+
 
     // OR for this XOR
     {
