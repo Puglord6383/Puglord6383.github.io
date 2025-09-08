@@ -22,31 +22,63 @@
 }
 
 *{ box-sizing:border-box }
+
 body{
   margin:0;
   font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
   background:var(--bg);
   color:var(--text);
   min-height:100svh;
-  display:grid;
-  place-items:center;
-  padding:24px;
+  padding:24px;              /* keep page padding */
+  /* Removed grid centering so content starts at the top */
 }
 
-.card{
-  width:100%;
-  max-width:920px;
+/* ---- Top profile card (new) ---- */
+.profile-card{
+  position: sticky; top: 0; z-index: 10;
+  display:flex; align-items:center; gap:12px;
+  width:100%; max-width:920px; margin:0 auto 16px;
+  padding:12px 16px;
   background:var(--panel);
   border:1px solid var(--border);
   border-radius:16px;
   box-shadow:var(--shadow);
-  padding:20px;
+  backdrop-filter: blur(8px); /* optional; remove if you prefer */
 }
 
-header{
-  display:flex; align-items:center; justify-content:space-between; gap:12px;
-  padding:4px 4px 14px; border-bottom:1px dashed var(--border);
+/* One place to control size, responsive */
+:root { --avatar-size: clamp(64px, 12vw, 96px); }
+
+/* Wrapper: perfect square + shadow (standard web avatar look) */
+.avatar-wrap{
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  border-radius: 50%;
+  overflow: hidden;              /* keeps the image round */
+  box-shadow: 0 6px 18px rgba(0,0,30,.18);
+  flex: 0 0 auto;                /* prevents flexbox stretching */
 }
+
+/* Image: fill the wrapper without distortion */
+.avatar{
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;             /* crop to cover, never squish */
+  border-radius: 50%;            /* optional (wrapper already clips) */
+}
+
+/* Slightly stronger shadow in dark mode */
+@media (prefers-color-scheme: dark){
+  .avatar-wrap{ box-shadow: 0 10px 28px rgba(0,0,0,.45); }
+}
+
+
+/* Stronger in dark mode */
+@media (prefers-color-scheme: dark){
+  .avatar-wrap{ box-shadow: 0 10px 28px rgba(0,0,30,.45); }
+}
+
 h1{ margin:0; font-size:clamp(22px,3.5vw,28px); font-weight:800; letter-spacing:.2px }
 .links{ display:flex; gap:10px; flex-wrap:wrap }
 .btn{
@@ -56,9 +88,23 @@ h1{ margin:0; font-size:clamp(22px,3.5vw,28px); font-weight:800; letter-spacing:
 }
 .btn:hover{ background:rgba(127,127,127,.08); transform:translateY(-1px) }
 
+/* Main card container */
+.card{
+  width:100%;
+  max-width:920px;
+  margin-inline:auto;      /* center horizontally */
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:16px;
+  box-shadow:var(--shadow);
+  padding:20px;
+}
+
+/* Layout */
 .layout{ display:grid; gap:16px; padding-top:16px; grid-template-columns: 260px 1fr }
 @media (max-width:740px){ .layout{ grid-template-columns: 1fr } }
 
+/* Tabs */
 .tabs{ display:flex; flex-direction:column; gap:8px }
 .tabs h2{
   margin:0 0 6px; font-size:14px; font-weight:700; letter-spacing:.08em;
@@ -76,6 +122,21 @@ h1{ margin:0; font-size:clamp(22px,3.5vw,28px); font-weight:800; letter-spacing:
 }
 .tab:focus-visible{ outline:2px solid color-mix(in srgb, var(--text) 30%, transparent) }
 
+/* Pure-CSS panels toggling (no JS) */
+[role="tabpanel"]{ display:none; }
+[role="tabpanel"]:not([hidden]){ display:block; }      /* default visible (panel 1) */
+:target[role="tabpanel"]{ display:block; }             /* show targeted panel */
+
+/* Highlight the active tab using :has(...) */
+.layout:not(:has([role="tabpanel"]:target)) .tab[href="#panel-p1"],
+.layout:has(#panel-p1:target) .tab[href="#panel-p1"],
+.layout:has(#panel-p2:target) .tab[href="#panel-p2"],
+.layout:has(#panel-p3:target) .tab[href="#panel-p3"]{
+  border-color:color-mix(in srgb, var(--text) 14%, transparent);
+  background:color-mix(in srgb, var(--text) 6%, transparent);
+}
+
+/* Panel look */
 .panel{
   border:1px solid var(--border);
   border-radius:12px;
@@ -85,6 +146,7 @@ h1{ margin:0; font-size:clamp(22px,3.5vw,28px); font-weight:800; letter-spacing:
 .panel h3{ margin:0 0 6px; font-size:18px }
 .panel p{ margin:.5rem 0; color:var(--muted) }
 
+/* Reorder tabs first on mobile */
 @media (max-width:740px){ .tabs{ order:-1 } .tab{ min-height:44px } }
 
 /* --- Circuit panel as a responsive ratio box --- */
@@ -102,7 +164,7 @@ h1{ margin:0; font-size:clamp(22px,3.5vw,28px); font-weight:800; letter-spacing:
 }
 .panel--circuit > .circuit{
   position: absolute;
-  inset: 0;        /* use inset:16px if you want a gutter */
+  inset: 0;
   width: 100%;
   height: 100%;
   display: block;
@@ -138,15 +200,3 @@ h1{ margin:0; font-size:clamp(22px,3.5vw,28px); font-weight:800; letter-spacing:
   fill: var(--wire-hi);
   text-shadow: 0 0 8px color-mix(in srgb, var(--wire-hi) 60%, transparent);
 }
-
-/* Prime/Composite display highlight when active (input=1) */
-.display.active .bit-rect { stroke: var(--wire-hi); }
-.display.active .bit-label { fill: var(--wire-hi); }
-.display.active { filter: drop-shadow(0 0 6px var(--wire-hi)); }
-
-/* Hide inner module frame so the panel edge is the only outline */
-.module-frame{ display:none }
-
-/* Handle styles (safe even if not used) */
-.module-handle{ cursor:grab; fill:transparent }
-.module-handle:active{ cursor:grabbing }

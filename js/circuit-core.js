@@ -60,7 +60,7 @@ export class Circuit {
         class:'module-frame',
         x:-8, y:-8, width:10, height:10, rx:10, ry:10,
         stroke:'var(--border)', fill:'none',
-        'pointer-events': 'none'      // ← add this
+        'pointer-events': 'none'
       });
       // Put frame **after** content so it renders above wires/gates/nodes
       g.appendChild(frame);
@@ -247,11 +247,9 @@ function _wirePoints(fromRef, toRef, via){
   const a = _getPin.call(this, fromRef);
   const b = _getPin.call(this, toRef);
 
-  // VIA ROUTE: keep your vias, but guarantee the final approach is horizontal
   if (via && via.length){
     const pts = [];
 
-    // exit tangent from source depending on first leg orientation
     const f = via[0];
     if (Math.abs(f.x - a.x) < 1e-6){
       const dirY = (f.y >= a.y) ? 1 : -1;
@@ -269,8 +267,6 @@ function _wirePoints(fromRef, toRef, via){
     return pts;
   }
 
-  // NO VIA: choose an orthogonal "L" path with horizontal final approach
-  // same x → vertical segment
   if (Math.abs(a.x - b.x) < 1e-6){
     const dirY = (b.y >= a.y) ? 1 : -1;
     return [

@@ -7,60 +7,72 @@
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
-
-    <!-- Card UI -->
-    <main class="card" role="main">
-      <header>
-      <h1>This Website is a WIP!</h1>
-    </header>
-      <section class="panel panel--circuit">
-        <svg class="circuit" viewBox="0 0 1600 560" role="img" aria-labelledby="circ-title" preserveAspectRatio="xMinYMin meet">
-          <title id="circ-title">Circuit Canvas</title>
-        </svg>
-      </section>
-      <header>
+    <!-- Profile box at the very top -->
+    <header class="profile-card" role="banner">
+      <div class="avatar-wrap">
+        <img
+          class="avatar"
+          src="./images/kevin-192.jpg"
+          srcset="./images/kevin-96.jpg 1x,
+                  ./images/kevin-192.jpg 2x,
+                  ./images/kevin-288.jpg 3x"
+          alt="Portrait of Kevin Pugliese"
+          width="96" height="96"
+          loading="eager" decoding="async" fetchpriority="high">
+      </div>
+      <div class="profile-meta">
         <h1>Kevin Pugliese</h1>
         <nav aria-label="Social">
           <div class="links">
-            <a class="btn" href="https://github.com/Puglord6383" target="_blank" rel="noopener">GitHub</a>
-            <a class="btn" href="https://www.linkedin.com/in/kevingpugliese" target="_blank" rel="noopener">LinkedIn</a>
+            <a class="btn" href="https://github.com/Puglord6383" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a class="btn" href="https://www.linkedin.com/in/kevingpugliese" target="_blank" rel="noopener noreferrer">LinkedIn</a>
           </div>
         </nav>
-      </header>
-      
+      </div>
+    </header>
+
+    <main class="card" role="main">
+      <section class="panel panel--circuit">
+        <svg class="circuit" viewBox="0 0 1600 560" aria-hidden="true" focusable="false" preserveAspectRatio="xMinYMin meet"></svg>
+      </section>
 
       <section class="layout">
         <aside class="tabs" role="tablist" aria-label="Projects">
           <h2>Projects</h2>
-          <a class="tab" role="tab" id="tab-p1" href="#panel-p1" aria-controls="panel-p1" aria-selected="true">Project 1</a>
-          <a class="tab" role="tab" id="tab-p2" href="#panel-p2" aria-controls="panel-p2" aria-selected="false">Project 2</a>
-          <a class="tab" role="tab" id="tab-p3" href="#panel-p3" aria-controls="panel-p3" aria-selected="false">Project 3</a>
+          <a class="tab" role="tab" id="tab-p1" href="#panel-p1" aria-controls="panel-p1" aria-selected="true" tabindex="0">Project 1</a>
+          <a class="tab" role="tab" id="tab-p2" href="#panel-p2" aria-controls="panel-p2" aria-selected="false" tabindex="-1">Project 2</a>
+          <a class="tab" role="tab" id="tab-p3" href="#panel-p3" aria-controls="panel-p3" aria-selected="false" tabindex="-1">Project 3</a>
         </aside>
 
         <section class="panel">
           <article id="panel-p1" role="tabpanel" aria-labelledby="tab-p1">
             <h3>GraphUF</h3>
-            <p>•	Developed Flask web app to explore unlocks (courses depending on a given prerequisite, transitively), to supplement missing functionality in UF course catalog</p>
-            <p>•	Collaborated with two teammates using Git + GitHub, including handling merge conflicts, pull requests, and code reviews</p>
-            <p>•	Processed 8,000,000+ unique data points by scraping and cleaning UF Courses API</p>
-            <p>•	Created custom DAG with 80,000+ nodes to achieve efficient storage of prerequisite data</p>
-            <p>•	Created transitive closure map of DAG to achieve O(1) time retrieval of reachable nodes</p>
+            <ul>
+              <li>Developed Flask web app to explore unlocks (courses depending on a given prerequisite, transitively), to supplement missing functionality in UF course catalog</li>
+              <li>Collaborated with two teammates using Git + GitHub, including handling merge conflicts, pull requests, and code reviews</li>
+              <li>Processed 8,000,000+ unique data points by scraping and cleaning UF Courses API</li>
+              <li>Created custom DAG with 80,000+ nodes to achieve efficient storage of prerequisite data</li>
+              <li>Created transitive closure map of DAG to achieve O(1) time retrieval of reachable nodes</li>
+            </ul>
           </article>
 
           <article id="panel-p2" role="tabpanel" aria-labelledby="tab-p2" hidden>
             <h3>Remote LCD</h3>
-            <p>•	Connected a Raspberry Pi Zero 2W to 1602 I2C LCD to enable serial data transfer to display</p>
-            <p>•	Programmed scripts using Arduino IDE to display ASCII and custom characters on the display</p>
-            <p>•	Enabled long-distance SSH from any device using Tailscale Mesh VPN</p>
-            <p>•	Modeled and 3D printed PLA device housing to safely expose LCD and Micro USB power/data port</p>
-
+            <ul>
+              <li>Connected a Raspberry Pi Zero 2W to 1602 I2C LCD to enable serial data transfer to display</li>
+              <li>Programmed scripts using Arduino IDE to display ASCII and custom characters on the display</li>
+              <li>Enabled long-distance SSH from any device using Tailscale Mesh VPN</li>
+              <li>Modeled and 3D printed PLA device housing to safely expose LCD and Micro USB power/data port</li>
+            </ul>
           </article>
 
           <article id="panel-p3" role="tabpanel" aria-labelledby="tab-p3" hidden>
             <h3>Battery-Powered Remote LED Switch</h3>
-            <p>•	Used 100mAh lithium polymer battery to enable charging and discharging via USB-C</p>
-            <p>•	Optimized hibernation and duty cycles; achieved 24-hour battery life with <1s response time</p>
-            <p>•	Implemented ESP Rainmaker to enable global access to GPIO and manage Wi-Fi connectivity</p>
+            <ul>
+              <li>Used 100mAh lithium polymer battery to enable charging and discharging via USB-C</li>
+              <li>Optimized hibernation and duty cycles; achieved 24-hour battery life with &lt;1s response time</li>
+              <li>Implemented ESP Rainmaker to enable global access to GPIO and manage Wi-Fi connectivity</li>
+            </ul>
           </article>
         </section>
       </section>

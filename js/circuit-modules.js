@@ -167,7 +167,7 @@ export function buildPrimeDemo(C){
       C.addWire(X1_AND_BOT.pins.out, X1_OR.pins.inB, [{x:oB.x, y:iB.y}, {x:iB.x-6, y:iB.y}]);
     }
 
-    // Re-route AND1 → NOT via the 60px-behind node (remove old direct run)
+    // Re-route AND1 → NOT via the 60px-behind node
     (function(){
       const inRef = N_A1.pins.in;
       // remove existing AND1.out → N_A1.in wire (if present)
@@ -184,7 +184,6 @@ export function buildPrimeDemo(C){
     })();
   })();
 
-  // --- XOR Module 2: AND2 XOR AND3 (same geometry rules as original) ---
   (function(){
     const h = 72*S; const xNot = COL.AND2 + 120;
     const topRef = 'AND2.out', botRef = 'AND3.out';
@@ -229,7 +228,6 @@ export function buildPrimeDemo(C){
     C.addWire(X2_AND_BOT.pins.out, X2_OR.pins.inB, [{x:oB.x, y:iB.y}, {x:iB.x-6, y:iB.y}]);
   })();
 
-  // --- XOR Module 12: OR(X1, X2) with equal-leg routing (unchanged) ---
   (function(){
     const h = 72*S;
     // Use the OR outputs made above
@@ -276,7 +274,6 @@ export function buildPrimeDemo(C){
     C.addWire(X12_AND_BOT.pins.out, X12_OR.pins.inB, [{x:o2.x, y:iB.y}, {x:iB.x-6, y:iB.y}]);
   })();
 
-  // --- XOR Module 3: AND4B XOR AND5B (unchanged) ---
   (function(){
     const h = 72*S; const xNot = COL.AND2 + 120;
     const topRef = 'AND4B.out', botRef = 'AND5B.out';
@@ -319,7 +316,6 @@ export function buildPrimeDemo(C){
     C.addWire(X3_AND_BOT.pins.out, X3_OR.pins.inB, [{x:oB.x, y:iB.y}, {x:iB.x-6, y:iB.y}]);
   })();
 
-  // --- XOR Module 23: OR2 XOR OR3, with OR4 feeding the top path (unchanged routes) ---
   (function(){
     const h = 72*S;
     let pO2, pO3;
@@ -366,7 +362,6 @@ export function buildPrimeDemo(C){
       { x: xNot - 30, y: C.pin(X23_AND_BOT.pins.inB).y }
     ]);
 
-    // Final OR for this stage
     const o1 = C.pin(X23_AND_TOP.pins.out);
     const o2 = C.pin(X23_AND_BOT.pins.out);
     const mid = (o1.y + o2.y) / 2;
@@ -379,7 +374,6 @@ export function buildPrimeDemo(C){
     C.addWire(X23_AND_BOT.pins.out, X23_OR.pins.inB, [{ x: o2.x, y: iB.y }, { x: iB.x - 6, y: iB.y }]);
   })();
 
-  // === PRIME DISPLAY === (unchanged)
   (function(){
     let pOut;
     try { pOut = C.pin('X23_XOR_OR.out'); } catch { return; }
