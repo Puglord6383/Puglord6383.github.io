@@ -4,39 +4,31 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- CHANGED: more focused, keyword-aligned description -->
     <meta name="description" content="Kevin Pugliese is a hardware and computer engineer building embedded systems, IoT devices, and integrated hardware–software projects." />
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
     
-    <!-- CHANGED: keep brand but align with primary keywords -->
     <title>Kevin Pugliese – Hardware & Computer Engineer</title>
 
     <link rel="canonical" href="https://kevinpugliese.com/" />
     <link rel="alternate" href="https://kevinpugliese.com/" hreflang="en" />
     <link rel="stylesheet" href="./styles.css" />
 
-    <!-- ADD: favicon using your avatar (ensure these files exist) -->
     <link rel="icon" href="/images/kevin-96.jpg" sizes="48x48" type="image/jpeg">
     <link rel="icon" href="/images/kevin-192.jpg" sizes="192x192" type="image/jpeg">
     <link rel="shortcut icon" href="/favicon.ico">
 
-    <!-- Open Graph / Twitter -->
     <meta property="og:type" content="website">
-    <!-- CHANGED: match <title> -->
     <meta property="og:title" content="Kevin Pugliese – Hardware & Computer Engineer">
     <meta property="og:description" content="Projects in embedded hardware, IoT devices, and integrated systems." />
     <meta property="og:url" content="https://kevinpugliese.com/">
     <meta property="og:image" content="https://kevinpugliese.com/images/kevin-1200.jpg">
-    <!-- ADD: optional but nice-to-have -->
     <meta property="og:site_name" content="Kevin Pugliese">
 
     <meta name="twitter:card" content="summary_large_image">
-    <!-- CHANGED: match OG title -->
     <meta name="twitter:title" content="Kevin Pugliese – Hardware & Computer Engineer">
     <meta name="twitter:description" content="Projects in embedded hardware, IoT devices, and integrated systems.">
     <meta name="twitter:image" content="https://kevinpugliese.com/images/kevin-1200.jpg">
 
-    <!-- ADD: author meta (small signal, but consistent) -->
     <meta name="author" content="Kevin Pugliese">
 
     <!-- Structured data -->
@@ -50,7 +42,7 @@
         "name": "Kevin Pugliese",
         "publisher": {"@id": "https://kevinpugliese.com/#person"},
         "inLanguage": "en",
-        "logo": "https://kevinpugliese.com/images/kevin-192.jpg"  /* ADD: site logo using avatar */
+        "logo": "https://kevinpugliese.com/images/kevin-192.jpg"
       },{
         "@type": "WebPage",
         "@id": "https://kevinpugliese.com/#webpage",
@@ -74,19 +66,16 @@
     }
     </script>
     <style>
-    /* Projects panel: box directly under the circuit canvas */
     .projects-panel { position: relative; margin-top: 16px; }
 
-    /* Tab strip attached to the top-left inside the box */
     .projects-tabs {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      align-items: flex-end; /* align bottoms so the active tab can sit "into" the panel */
-      margin: -0.25rem 0 0; /* pull a bit toward the panel's top edge */
+      align-items: flex-end;
+      margin: -0.25rem 0 0;
     }
 
-    /* Beveled rectangle tabs (no pills): rounded top corners, square bottom corners */
     .project-tab {
       appearance: none;
       display: inline-flex;
@@ -94,27 +83,25 @@
       cursor: pointer;
       padding: 0.55rem 0.9rem;
       border: 2px solid currentColor;
-      border-radius: 10px 10px 0 0; /* beveled top corners */
+      border-radius: 10px 10px 0 0;
       background: var(--panel-bg, transparent);
       color: inherit;
       line-height: 1;
       font-weight: 600;
-      white-space: nowrap; /* keep labels on one line */
+      white-space: nowrap;
       transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease;
     }
     .project-tab:hover { background: rgba(0,0,0,0.05); }
     .project-tab:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
 
-    /* Selected tab merges with content area: no bottom border, overlaps the panel body's top border */
     .project-tab[aria-selected="true"] {
       border-bottom-color: transparent;
-      margin-bottom: -2px; /* sit over the panel body top border (2px) */
-      background: inherit; /* same bg as panel */
+      margin-bottom: -2px;
+      background: inherit;
     }
 
-    /* The shared content area under the tabs; its top border connects to the tabs */
     .project-panel-body {
-      border-top: 2px solid currentColor; /* line that inactive tabs sit on; active tab opens into it */
+      border-top: 2px solid currentColor;
       padding-top: 0.75rem;
     }
 
@@ -157,7 +144,6 @@
         <svg class="circuit" viewBox="0 0 1600 560" focusable="false" preserveAspectRatio="xMinYMin meet"></svg>
       </section>
 
-      <!-- Minimal homepage: just project links; details live on project pages -->
       <section class="panel projects-panel" id="projects">
         <div class="projects-tabs" role="tablist" aria-label="Projects">
           <button class="project-tab" role="tab" aria-selected="true" aria-controls="project-panel" id="tab-graphuf" data-key="graphuf">GraphUF</button>
@@ -170,10 +156,9 @@
         </div>
       </section>
 
-      <!-- ADD: small descriptive section for extra indexable content -->
       <section class="panel">
         <h2>What I'm working on now</h2>
-        <p>My team and I are currently developing an app designed to remove barriers to food budgeting - foodcast. I am also researching TinyML for translation purposes.</p>
+        <p>My team and I are currently developing Foodcast - an app designed to remove barriers to food budgeting. I am also researching TinyML for local translation purposes.</p>
       </section>
       
     </main>
