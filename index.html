@@ -4,25 +4,40 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <meta name="description" content="Kevin Pugliese is a computer engineer building hardware and integrated systems. Explore work, projects, and ways to connect." />
+    <!-- CHANGED: more focused, keyword-aligned description -->
+    <meta name="description" content="Kevin Pugliese is a hardware and computer engineer building embedded systems, IoT devices, and integrated hardware–software projects." />
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
     
-    <title>Kevin Pugliese - Hardware Engineer (Official Site)</title>
+    <!-- CHANGED: keep brand but align with primary keywords -->
+    <title>Kevin Pugliese – Hardware & Computer Engineer</title>
 
     <link rel="canonical" href="https://kevinpugliese.com/" />
     <link rel="alternate" href="https://kevinpugliese.com/" hreflang="en" />
     <link rel="stylesheet" href="./styles.css" />
 
+    <!-- ADD: favicon using your avatar (ensure these files exist) -->
+    <link rel="icon" href="/images/kevin-96.jpg" sizes="48x48" type="image/jpeg">
+    <link rel="icon" href="/images/kevin-192.jpg" sizes="192x192" type="image/jpeg">
+    <link rel="shortcut icon" href="/favicon.ico">
+
     <!-- Open Graph / Twitter -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Kevin Pugliese - Hardware Engineer">
-    <meta property="og:description" content="Projects in hardware and integrated systems.">
+    <!-- CHANGED: match <title> -->
+    <meta property="og:title" content="Kevin Pugliese – Hardware & Computer Engineer">
+    <meta property="og:description" content="Projects in embedded hardware, IoT devices, and integrated systems." />
     <meta property="og:url" content="https://kevinpugliese.com/">
     <meta property="og:image" content="https://kevinpugliese.com/images/kevin-1200.jpg">
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Kevin Pugliese - Hardware Engineer">
-    <meta name="twitter:description" content="Projects in hardware and integrated systems.">
+    <!-- ADD: optional but nice-to-have -->
+    <meta property="og:site_name" content="Kevin Pugliese">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <!-- CHANGED: match OG title -->
+    <meta name="twitter:title" content="Kevin Pugliese – Hardware & Computer Engineer">
+    <meta name="twitter:description" content="Projects in embedded hardware, IoT devices, and integrated systems.">
     <meta name="twitter:image" content="https://kevinpugliese.com/images/kevin-1200.jpg">
+
+    <!-- ADD: author meta (small signal, but consistent) -->
+    <meta name="author" content="Kevin Pugliese">
 
     <!-- Structured data -->
     <script type="application/ld+json">
@@ -34,21 +49,22 @@
         "url": "https://kevinpugliese.com/",
         "name": "Kevin Pugliese",
         "publisher": {"@id": "https://kevinpugliese.com/#person"},
-        "inLanguage": "en"
+        "inLanguage": "en",
+        "logo": "https://kevinpugliese.com/images/kevin-192.jpg"  /* ADD: site logo using avatar */
       },{
         "@type": "WebPage",
         "@id": "https://kevinpugliese.com/#webpage",
         "url": "https://kevinpugliese.com/",
-        "name": "Kevin Pugliese - Hardware Engineer",
+        "name": "Kevin Pugliese – Hardware & Computer Engineer",
         "isPartOf": {"@id": "https://kevinpugliese.com/#website"},
         "about": {"@id": "https://kevinpugliese.com/#person"},
-        "description": "Kevin Pugliese is a computer engineer building hardware and integrated systems."
+        "description": "Kevin Pugliese is a hardware and computer engineer building embedded systems, IoT devices, and integrated hardware–software projects."
       },{
         "@type": "Person",
         "@id": "https://kevinpugliese.com/#person",
         "name": "Kevin Pugliese",
         "image": "https://kevinpugliese.com/images/kevin-1200.jpg",
-        "jobTitle": "Hardware Engineer",
+        "jobTitle": "Hardware & Computer Engineer",
         "url": "https://kevinpugliese.com/",
         "sameAs": [
           "https://github.com/Puglord6383",
@@ -120,8 +136,10 @@
           loading="eager" decoding="async" fetchpriority="high">
       </div>
       <div class="profile-meta">
-        <h1>Kevin Pugliese</h1>
-        <p class="lead">Hardware and Computer engineer building integrated systems and IoT devices.</p>
+        <!-- CHANGED: H1 aligned with title/JSON-LD -->
+        <h1>Kevin Pugliese – Hardware & Computer Engineer</h1>
+        <!-- CHANGED: slightly richer keyword text -->
+        <p class="lead">Building embedded systems, low-power IoT devices, and integrated hardware–software projects.</p>
         <nav aria-label="Social">
           <div class="links">
             <a class="btn" href="https://github.com/Puglord6383" target="_blank" rel="me noopener noreferrer">GitHub</a>
@@ -141,17 +159,22 @@
 
       <!-- Minimal homepage: just project links; details live on project pages -->
       <section class="panel projects-panel" id="projects">
-      <div class="projects-tabs" role="tablist" aria-label="Projects">
-        <button class="project-tab" role="tab" aria-selected="true" aria-controls="project-panel" id="tab-graphuf" data-key="graphuf">GraphUF</button>
-        <button class="project-tab" role="tab" aria-selected="false" aria-controls="project-panel" id="tab-remote-lcd" data-key="remote-lcd">Remote LCD</button>
-        <button class="project-tab" role="tab" aria-selected="false" aria-controls="project-panel" id="tab-remote-led-switch" data-key="remote-led-switch">Battery-Powered Remote LED Switch</button>
-      </div>
-      <div id="project-panel" class="project-panel-body" role="tabpanel" aria-labelledby="tab-graphuf">
-        <h2 id="project-panel-title">Project details</h2>
-        <div id="project-panel-content"><p>Select a project to see a quick blurb.</p></div>
-      </div>
-    </section>
-          <!-- Bottom info dock: content changes by selected tab -->
+        <div class="projects-tabs" role="tablist" aria-label="Projects">
+          <button class="project-tab" role="tab" aria-selected="true" aria-controls="project-panel" id="tab-graphuf" data-key="graphuf">GraphUF</button>
+          <button class="project-tab" role="tab" aria-selected="false" aria-controls="project-panel" id="tab-remote-lcd" data-key="remote-lcd">Remote LCD</button>
+          <button class="project-tab" role="tab" aria-selected="false" aria-controls="project-panel" id="tab-remote-led-switch" data-key="remote-led-switch">Battery-Powered Remote LED Switch</button>
+        </div>
+        <div id="project-panel" class="project-panel-body" role="tabpanel" aria-labelledby="tab-graphuf">
+          <h2 id="project-panel-title">Project details</h2>
+          <div id="project-panel-content"><p>Select a project to see a quick blurb.</p></div>
+        </div>
+      </section>
+
+      <!-- ADD: small descriptive section for extra indexable content -->
+      <section class="panel">
+        <h2>What I'm working on now</h2>
+        <p>My team and I are currently developing an app designed to remove barriers to food budgeting - foodcast. I am also researching TinyML for translation purposes.</p>
+      </section>
       
     </main>
 
@@ -171,7 +194,7 @@
           },
           "remote-led-switch": {
             title: "Battery-Powered Remote LED Switch",
-            html: `<p>100mAh LiPo with USB-C charge/discharge. Optimized duty cycles for ~12h battery life with &lt;1s response; ESP Rainmaker for global GPIO control and Wi‑Fi management.</p>
+            html: `<p>100mAh LiPo with USB-C charge/discharge. Optimized duty cycles for ~12h battery life with &lt;1s response; ESP Rainmaker for global GPIO control and Wi-Fi management.</p>
                    <p><a href="/projects/remote-led-switch/">Open project page →</a></p>`
           }
         };
@@ -181,7 +204,9 @@
         const panelContent = document.getElementById('project-panel-content');
 
         function selectTab(key, el) {
-          document.querySelectorAll('.project-tab').forEach(btn => btn.setAttribute('aria-selected', (btn === el) ? 'true' : 'false'));
+          document.querySelectorAll('.project-tab').forEach(btn =>
+            btn.setAttribute('aria-selected', (btn === el) ? 'true' : 'false')
+          );
           const data = blurbs[key];
           if (data) {
             panelTitle.textContent = data.title;
@@ -193,7 +218,12 @@
         const tabs = Array.from(document.querySelectorAll('.project-tab'));
         tabs.forEach(btn => {
           btn.addEventListener('click', (e) => { e.preventDefault(); selectTab(btn.dataset.key, btn); });
-          btn.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectTab(btn.dataset.key, btn); } });
+          btn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              selectTab(btn.dataset.key, btn);
+            }
+          });
         });
 
         if (tabs[0]) selectTab(tabs[0].dataset.key, tabs[0]);
