@@ -1,69 +1,82 @@
-/* Base theme */
-:root{
-  --bg:#f6f7f9;
-  --panel:#ffffff;
-  --text:#111318;
-  --muted:#5b616b;
-  --border:rgba(0,0,0,.10);
-  --shadow:0 8px 24px rgba(0,0,0,.08);
+:root {
+  --bg: #f6f7f9;
+  --panel: #ffffff;
+  --text: #111318;
+  --muted: #5b616b;
+  --border: rgba(0, 0, 0, 0.1);
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
   --wire: color-mix(in srgb, var(--text) 28%, transparent);
   --wire-hi: #10b981;
   color-scheme: light dark;
 }
-@media (prefers-color-scheme: dark){
-  :root{
-    --bg:#0b0c10;
-    --panel:#12131a;
-    --text:#e7e7e7;
-    --muted:#a7a7a7;
-    --border:rgba(255,255,255,.12);
-    --shadow:0 8px 28px rgba(0,0,0,.35);
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b0c10;
+    --panel: #12131a;
+    --text: #e7e7e7;
+    --muted: #a7a7a7;
+    --border: rgba(255, 255, 255, 0.12);
+    --shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
   }
 }
 
-*{ box-sizing:border-box }
-
-body{
-  margin:0;
-  font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
-  min-height:100svh;
-  padding:24px;              /* keep page padding */
+* {
+  box-sizing: border-box;
 }
 
-/* ---- Top profile card ---- */
-.profile-card{
-  position: sticky; top: 0; z-index: 10;
-  display:flex; align-items:center; gap:12px;
-  width:100%; max-width:920px; margin:0 auto 16px;
-  padding:12px 16px;
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:16px;
-  box-shadow:var(--shadow);
-  backdrop-filter: blur(8px); /* optional; remove if you prefer */
+body {
+  margin: 0;
+  font:
+    16px/1.5 system-ui,
+    -apple-system,
+    Segoe UI,
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100svh;
+  padding: 24px;
 }
 
-/* One place to control avatar size, responsive */
-:root { --avatar-size: clamp(64px, 12vw, 96px); }
+.profile-card {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto 16px;
+  padding: 12px 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(8px);
+}
 
-/* Avatar wrapper */
-.avatar-wrap{
+:root {
+  --avatar-size: clamp(64px, 12vw, 96px);
+}
+
+.avatar-wrap {
   width: var(--avatar-size);
   height: var(--avatar-size);
   border-radius: 50%;
   overflow: hidden;
-  box-shadow: 0 6px 18px rgba(0,0,30,.18);
+  box-shadow: 0 6px 18px rgba(0, 0, 30, 0.18);
   flex: 0 0 auto;
 }
-/* Slightly stronger shadow in dark mode */
-@media (prefers-color-scheme: dark){
-  .avatar-wrap{ box-shadow: 0 10px 28px rgba(0,0,30,.45); }
+@media (prefers-color-scheme: dark) {
+  .avatar-wrap {
+    box-shadow: 0 10px 28px rgba(0, 0, 30, 0.45);
+  }
 }
 
-/* Avatar image */
-.avatar{
+.avatar {
   width: 100%;
   height: 100%;
   display: block;
@@ -71,133 +84,190 @@ body{
   border-radius: 50%;
 }
 
-h1{ margin:0; font-size:clamp(22px,3.5vw,28px); font-weight:800; letter-spacing:.2px }
-.links{ display:flex; gap:10px; flex-wrap:wrap }
-.btn{
-  appearance:none; border:1px solid var(--border); background:transparent; color:inherit;
-  padding:10px 14px; border-radius:10px; text-decoration:none; font-weight:600;
-  transition:background .15s ease, transform .06s ease, border-color .15s ease;
+h1 {
+  margin: 0;
+  font-size: clamp(22px, 3.5vw, 28px);
+  font-weight: 800;
+  letter-spacing: 0.2px;
 }
-.btn:hover{ background:rgba(127,127,127,.08); transform:translateY(-1px) }
-
-/* Main card container */
-.card{
-  width:100%;
-  max-width:920px;
-  margin-inline:auto;      /* center horizontally */
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:16px;
-  box-shadow:var(--shadow);
-  padding:20px;
+.links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.btn {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+  padding: 10px 14px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  transition:
+    background 0.15s ease,
+    transform 0.06s ease,
+    border-color 0.15s ease;
+}
+.btn:hover {
+  background: rgba(127, 127, 127, 0.08);
+  transform: translateY(-1px);
 }
 
-/* Panel look */
-.panel{
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:16px;
-  min-height:180px;
+.card {
+  width: 100%;
+  max-width: 920px;
+  margin-inline: auto;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 20px;
 }
-.panel h3{ margin:0 0 6px; font-size:18px }
-.panel p{ margin:.5rem 0; color:var(--muted) }
 
-/* --- Circuit panel as a responsive ratio box --- */
-.panel--circuit{
+.panel {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  min-height: 180px;
+}
+.panel h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+}
+.panel p {
+  margin: 0.5rem 0;
+  color: var(--muted);
+}
+
+.panel--circuit {
   position: relative;
-  padding: 0;      /* SVG will fill; no inner padding */
-  min-height: 0;   /* override .panel’s min-height */
+  padding: 0;
+  min-height: 0;
   overflow: hidden;
 }
-.panel--circuit::before{
+.panel--circuit::before {
   content: "";
   display: block;
-  /* viewBox 1600×560 → 35% */
   padding-top: calc(560 / 1600 * 100%);
 }
-.panel--circuit > .circuit{
+.panel--circuit > .circuit {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   display: block;
 }
-/* Prevent text selection inside the circuit */
-.panel--circuit, .panel--circuit * {
+.panel--circuit,
+.panel--circuit * {
   -webkit-user-select: none;
   user-select: none;
 }
 
-/* Wires, nodes, gates */
-.wire{ stroke: var(--wire, color-mix(in srgb, var(--text) 28%, transparent)); stroke-width:3; fill:none; stroke-linecap:butt }
-.wire.high{ stroke: var(--wire-hi) }
-.node{ fill: color-mix(in srgb, var(--text) 28%, transparent) }
-.node.high{ fill: var(--wire-hi) }
-.bit-rect{ fill: var(--panel); stroke: var(--border) }
-.bit-label{
-  font-weight:700; font-size:16px; dominant-baseline:middle; text-anchor:middle;
-  user-select:none; pointer-events:none; fill: var(--text);
+.wire {
+  stroke: var(--wire, color-mix(in srgb, var(--text) 28%, transparent));
+  stroke-width: 3;
+  fill: none;
+  stroke-linecap: butt;
 }
-.bit{ cursor:pointer }
-.bit:hover .bit-rect{ filter: brightness(1.03) }
-.bit:focus-visible .bit-rect{ stroke: color-mix(in srgb, var(--text) 40%, transparent); stroke-width:3 }
-.gate-shape{ stroke: var(--border); stroke-width:2; fill:none }
-.gate-shape.high { stroke: var(--wire-hi); }
-
-/* Glow when an input bit is ON */
-.bit.active .bit-rect{
+.wire.high {
   stroke: var(--wire-hi);
-  filter: drop-shadow(0 0 0.45rem color-mix(in srgb, var(--wire-hi) 55%, transparent));
 }
-.bit.active .bit-label{
+.node {
+  fill: color-mix(in srgb, var(--text) 28%, transparent);
+}
+.node.high {
+  fill: var(--wire-hi);
+}
+.bit-rect {
+  fill: var(--panel);
+  stroke: var(--border);
+}
+.bit-label {
+  font-weight: 700;
+  font-size: 16px;
+  dominant-baseline: middle;
+  text-anchor: middle;
+  user-select: none;
+  pointer-events: none;
+  fill: var(--text);
+}
+.bit {
+  cursor: pointer;
+}
+.bit:hover .bit-rect {
+  filter: brightness(1.03);
+}
+.bit:focus-visible .bit-rect {
+  stroke: color-mix(in srgb, var(--text) 40%, transparent);
+  stroke-width: 3;
+}
+.gate-shape {
+  stroke: var(--border);
+  stroke-width: 2;
+  fill: none;
+}
+.gate-shape.high {
+  stroke: var(--wire-hi);
+}
+
+.bit.active .bit-rect {
+  stroke: var(--wire-hi);
+  filter: drop-shadow(
+    0 0 0.45rem color-mix(in srgb, var(--wire-hi) 55%, transparent)
+  );
+}
+.bit.active .bit-label {
   fill: var(--wire-hi);
   text-shadow: 0 0 8px color-mix(in srgb, var(--wire-hi) 60%, transparent);
 }
 
-/* --- Projects panel just below the circuit --- */
-.panel.projects-panel{
-  /* uses .panel look; just adds spacing */
+.panel.projects-panel {
   margin-top: 16px;
 }
 
-/* Tab strip attached to the top-left inside the box */
-.projects-tabs{
+.projects-tabs {
   display: flex;
-  flex-wrap: wrap;          /* wrap only when necessary */
+  flex-wrap: wrap;
   gap: 8px;
-  align-items: flex-end;    /* align bottoms so active tab can sit into content */
-  margin: 0;                /* snug at the top-left */
+  align-items: flex-end;
+  margin: 0;
 }
 
-/* Beveled rectangle tabs: rounded top corners, square bottoms */
-.project-tab{
+.project-tab {
   appearance: none;
   display: inline-flex;
   align-items: center;
   cursor: pointer;
   padding: 0.55rem 0.9rem;
-  border: 1px solid var(--border);     /* match panel border width */
-  border-radius: 10px 10px 0 0;        /* beveled top corners */
-  background: var(--panel);            /* same surface as panel */
+  border: 1px solid var(--border);
+  border-radius: 10px 10px 0 0;
+  background: var(--panel);
   color: inherit;
   font: inherit;
   font-weight: 700;
   line-height: 1;
-  white-space: nowrap;                 /* keep labels on one line */
-  transition: background-color .14s ease, color .14s ease, border-color .14s ease;
+  white-space: nowrap;
+  transition:
+    background-color 0.14s ease,
+    color 0.14s ease,
+    border-color 0.14s ease;
 }
-.project-tab:hover{ background: rgba(127,127,127,.08); }
-.project-tab:focus-visible{ outline: 2px solid color-mix(in srgb, var(--text) 30%, transparent); outline-offset: 2px; }
+.project-tab:hover {
+  background: rgba(127, 127, 127, 0.08);
+}
+.project-tab:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--text) 30%, transparent);
+  outline-offset: 2px;
+}
 
-/* Selected tab merges with the content area below */
-.project-tab[aria-selected="true"]{
-  border-bottom-color: transparent;    /* open bottom edge */
-  margin-bottom: -1px;                 /* overlap the content’s top border (1px) */
+.project-tab[aria-selected="true"] {
+  border-bottom-color: transparent;
+  margin-bottom: -1px;
   background: var(--panel);
 }
 
-/* Shared content area; its top border connects to tabs */
-.project-panel-body{
-  border-top: 1px solid var(--border); /* same width as tabs/panel border */
+.project-panel-body {
+  border-top: 1px solid var(--border);
   padding-top: 12px;
 }
