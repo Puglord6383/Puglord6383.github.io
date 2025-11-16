@@ -32,7 +32,7 @@ export function buildPrimeDemo(C) {
     const dst = C.pin(destPin);
     const rx = RAILS[sig];
     taps[sig].push(dst.y);
-    const approachX = dst.x - dst.r - 6; // ensure last hop is horizontal
+    const approachX = dst.x - dst.r - 6;
     C.addWire(srcRef, destPin, [
       { x: rx, y: src.y },
       { x: rx, y: dst.y },
@@ -177,9 +177,6 @@ export function buildPrimeDemo(C) {
 
     (function () {
       const inRef = N_A1.pins.in;
-      const sim = C._groupEl.ownerSVGElement
-        ? C._groupEl.ownerSVGElement
-        : null;
       for (
         let i = C._items?.wires ? C._items.wires.size - 1 : -1;
         i >= 0;
