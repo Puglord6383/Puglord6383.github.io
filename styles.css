@@ -232,6 +232,7 @@ h1 {
   gap: 8px;
   align-items: flex-end;
   margin: 0;
+  min-width: 0;
 }
 
 .project-tab {
@@ -270,4 +271,22 @@ h1 {
 .project-panel-body {
   border-top: 1px solid var(--border);
   padding-top: 12px;
+}
+
+@media (max-width: 900px) {
+  .projects-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .project-tab {
+    flex: 0 0 auto;
+    min-width: max-content;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.9rem;
+  }
 }
