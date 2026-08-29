@@ -5,7 +5,8 @@
   --muted: #5b616b;
   --border: rgba(0, 0, 0, 0.1);
   --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  --wire: color-mix(in srgb, var(--text) 28%, transparent);
+  --wire: color-mix(in srgb, var(--text) 38%, transparent);
+  --gate: color-mix(in srgb, var(--text) 60%, transparent);
   --wire-hi: #10b981;
   color-scheme: light dark;
 }
@@ -114,6 +115,23 @@ h1 {
   transform: translateY(-1px);
 }
 
+.panel a,
+.card > p a {
+  color: inherit;
+  text-decoration-color: var(--wire-hi);
+  text-underline-offset: 2px;
+}
+.panel a:hover,
+.panel a:focus-visible,
+.card > p a:hover,
+.card > p a:focus-visible {
+  color: var(--wire-hi);
+}
+
+.circuit-note {
+  display: none;
+}
+
 .card {
   width: 100%;
   max-width: 920px;
@@ -149,7 +167,7 @@ h1 {
 .panel--circuit::before {
   content: "";
   display: block;
-  padding-top: calc(560 / 1600 * 100%);
+  padding-top: calc(576 / 1380 * 100%);
 }
 .panel--circuit > .circuit {
   position: absolute;
@@ -174,14 +192,26 @@ h1 {
   stroke: var(--wire-hi);
 }
 .node {
-  fill: color-mix(in srgb, var(--text) 28%, transparent);
+  fill: var(--wire);
+}
+
+/* A NOT gate's inversion bubble must read as an open circle, not as a filled
+   junction dot like every other pin. */
+.node.bubble {
+  fill: var(--panel);
+  stroke: var(--gate);
+  stroke-width: 2.5;
+}
+.node.bubble.high {
+  fill: var(--panel);
+  stroke: var(--wire-hi);
 }
 .node.high {
   fill: var(--wire-hi);
 }
 .bit-rect {
   fill: var(--panel);
-  stroke: var(--border);
+  stroke: var(--gate);
 }
 .bit-label {
   font-weight: 700;
@@ -203,8 +233,8 @@ h1 {
   stroke-width: 3;
 }
 .gate-shape {
-  stroke: var(--border);
-  stroke-width: 2;
+  stroke: var(--gate);
+  stroke-width: 2.5;
   fill: none;
 }
 .gate-shape.high {
@@ -223,6 +253,7 @@ h1 {
 }
 
 .panel.projects-panel {
+  position: relative;
   margin-top: 16px;
 }
 
@@ -231,46 +262,64 @@ h1 {
   flex-wrap: wrap;
   gap: 8px;
   align-items: flex-end;
-  margin: 0;
-  min-width: 0;
+  margin: -0.25rem 0 0;
 }
 
 .project-tab {
   appearance: none;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   cursor: pointer;
   padding: 0.55rem 0.9rem;
-  border: 1px solid var(--border);
+  min-width: 120px;
+  height: 48px;
+  border: 2px solid currentColor;
+  border-bottom: 1px solid var(--border);
   border-radius: 10px 10px 0 0;
-  background: var(--panel);
+  background: var(--panel-bg, transparent);
   color: inherit;
-  font: inherit;
-  font-weight: 700;
   line-height: 1;
+  font-weight: 600;
   white-space: nowrap;
   transition:
-    background-color 0.14s ease,
-    color 0.14s ease,
-    border-color 0.14s ease;
+    background-color 140ms ease,
+    color 140ms ease,
+    border-color 140ms ease;
 }
 .project-tab:hover {
-  background: rgba(127, 127, 127, 0.08);
+  background: rgba(0, 0, 0, 0.05);
 }
 .project-tab:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--text) 30%, transparent);
+  outline: 2px solid currentColor;
   outline-offset: 2px;
 }
 
 .project-tab[aria-selected="true"] {
   border-bottom-color: transparent;
-  margin-bottom: -1px;
+  background: inherit;
+  position: relative;
+}
+
+.project-tab[aria-selected="true"]::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
   background: var(--panel);
 }
 
 .project-panel-body {
-  border-top: 1px solid var(--border);
-  padding-top: 12px;
+  border-top: 1px solid currentColor;
+  padding-top: 0.75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .project-tab {
+    transition: none;
+  }
 }
 
 @media (max-width: 900px) {
@@ -279,8 +328,43 @@ h1 {
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 4px;
     gap: 4px;
     width: 100%;
+  }
+
+  /* Fade the edge the strip can still scroll toward, so a clipped tab reads
+     as "more this way" instead of as a rendering bug. */
+  .projects-tabs.can-scroll-right {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      #000 calc(100% - 36px),
+      transparent
+    );
+    mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent);
+  }
+
+  .projects-tabs.can-scroll-left {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 36px);
+    mask-image: linear-gradient(to right, transparent, #000 36px);
+  }
+
+  .projects-tabs.can-scroll-left.can-scroll-right {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 36px,
+      #000 calc(100% - 36px),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 36px,
+      #000 calc(100% - 36px),
+      transparent
+    );
   }
 
   .project-tab {
@@ -288,5 +372,92 @@ h1 {
     min-width: max-content;
     padding: 0.5rem 0.8rem;
     font-size: 0.9rem;
+    scroll-snap-align: start;
+  }
+}
+
+/* Content panels: experience, education, skills */
+.panel h2 {
+  margin: 0 0 10px;
+  font-size: 20px;
+}
+
+.panel h3 + .entry-meta {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.panel h3 {
+  margin: 18px 0 4px;
+}
+
+.panel > h3:first-of-type {
+  margin-top: 0;
+}
+
+.panel ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.15rem;
+  color: var(--muted);
+}
+
+.panel li {
+  margin: 0.35rem 0;
+  line-height: 1.5;
+}
+
+.panel li strong {
+  color: var(--text, inherit);
+}
+
+#experience,
+#education,
+#certifications,
+#skills,
+#now {
+  margin-top: 16px;
+  min-height: 0;
+}
+
+@media (max-width: 700px), (max-height: 600px) {
+  .profile-card {
+    position: static;
+  }
+}
+
+@media (max-width: 700px) {
+  body {
+    padding: 12px;
+  }
+
+  .panel--circuit::before {
+    display: none;
+  }
+
+  .panel--circuit > .circuit {
+    display: none;
+  }
+
+  .circuit-note {
+    display: block;
+    margin: 0;
+    padding: 18px 16px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .lead {
+    margin: 8px 0;
+    line-height: 1.35;
+  }
+
+  .links {
+    gap: 6px;
+  }
+
+  .btn {
+    padding: 9px 8px;
   }
 }

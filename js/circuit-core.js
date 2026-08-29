@@ -592,6 +592,10 @@ function _addNOT(id, x, y, s = 1, layers, items) {
     layers,
     items,
   );
+  // Mark the output pin as the inversion bubble so it renders as an open
+  // circle rather than a filled junction node.
+  const outPin = this.pins.get(out);
+  if (outPin && outPin.el) outPin.el.classList.add("bubble");
   const comp = { id, kind: "NOT", pins: { in: inn, out }, els: { poly }, s };
   this.comps.set(id, comp);
   if (items) items.comps.add(id);
