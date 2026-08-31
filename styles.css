@@ -195,8 +195,6 @@ h1 {
   fill: var(--wire);
 }
 
-/* A NOT gate's inversion bubble must read as an open circle, not as a filled
-   junction dot like every other pin. */
 .node.bubble {
   fill: var(--panel);
   stroke: var(--gate);
@@ -334,8 +332,6 @@ h1 {
     width: 100%;
   }
 
-  /* Fade the edge the strip can still scroll toward, so a clipped tab reads
-     as "more this way" instead of as a rendering bug. */
   .projects-tabs.can-scroll-right {
     -webkit-mask-image: linear-gradient(
       to right,
