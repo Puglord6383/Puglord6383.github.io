@@ -257,13 +257,55 @@ h1 {
 
 .projects-tabs {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 4px;
   gap: 8px;
+  width: 100%;
   align-items: flex-end;
   margin: -0.25rem 0 0;
+  scrollbar-width: none;
+}
+.projects-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+/* Fade whichever edge still has tabs behind it. */
+.projects-tabs.can-scroll-right {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    #000 calc(100% - 36px),
+    transparent
+  );
+  mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent);
+}
+.projects-tabs.can-scroll-left {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 36px);
+  mask-image: linear-gradient(to right, transparent, #000 36px);
+}
+.projects-tabs.can-scroll-left.can-scroll-right {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 36px,
+    #000 calc(100% - 36px),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 36px,
+    #000 calc(100% - 36px),
+    transparent
+  );
 }
 
 .project-tab {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
   appearance: none;
   display: inline-flex;
   align-items: center;
@@ -322,46 +364,9 @@ h1 {
 
 @media (max-width: 900px) {
   .projects-tabs {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scroll-snap-type: x proximity;
-    scroll-padding-inline: 4px;
     gap: 4px;
-    width: 100%;
   }
 
-  .projects-tabs.can-scroll-right {
-    -webkit-mask-image: linear-gradient(
-      to right,
-      #000 calc(100% - 36px),
-      transparent
-    );
-    mask-image: linear-gradient(to right, #000 calc(100% - 36px), transparent);
-  }
-
-  .projects-tabs.can-scroll-left {
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 36px);
-    mask-image: linear-gradient(to right, transparent, #000 36px);
-  }
-
-  .projects-tabs.can-scroll-left.can-scroll-right {
-    -webkit-mask-image: linear-gradient(
-      to right,
-      transparent,
-      #000 36px,
-      #000 calc(100% - 36px),
-      transparent
-    );
-    mask-image: linear-gradient(
-      to right,
-      transparent,
-      #000 36px,
-      #000 calc(100% - 36px),
-      transparent
-    );
-  }
 
   .project-tab {
     flex: 0 0 auto;

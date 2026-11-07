@@ -1,6 +1,11 @@
 import { Circuit } from "./circuit-core.js";
 import { buildPrimeDemo } from "./circuit-modules.js";
 const projectBlurbs = {
+  "fpga-am-radio": {
+    title: "FPGA AM Radio Receiver",
+    html: `<p>A 16-channel AM radio receiver on an Intel MAX 10 FPGA sampling at 64 MHz. Each station is isolated with I/Q mixing and CIC/FIR decimation filters, cutting 64M samples/s down to 16k. One I multiplier and one Q multiplier are reused across all 128 FIR taps of all 16 channels, reaching 81.3 MHz Fmax on a 64 MHz clock in 37,624 logic elements. The FPGA links to an ESP32 over SPI, with C firmware that streams audio and tunes over Wi-Fi.</p>
+           <p><a href="/projects/fpga-am-radio/">Open project page →</a></p>`,
+  },
   "elementary-cpu": {
     title: "Elementary CPU",
     html: `<p>A 4-bit CPU in VHDL with ROM-based instruction fetch and a registered ALU, achieving 250 MHz Fmax in 57 logic elements and 17 registers on an Intel MAX 10 FPGA. The control unit is a state machine that decodes 6 opcodes into datapath control words, including multi-state instructions for data loads and jumps. Every instruction was verified in simulation and on hardware using hand-assembled test programs.</p>
