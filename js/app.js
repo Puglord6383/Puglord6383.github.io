@@ -3,37 +3,68 @@ import { buildPrimeDemo } from "./circuit-modules.js";
 const projectBlurbs = {
   "fpga-am-radio": {
     title: "FPGA AM Radio Receiver",
-    html: `<p>A 16-channel AM radio receiver on an Intel MAX 10 FPGA sampling at 64 MHz. Each station is isolated with I/Q mixing and CIC/FIR decimation filters, cutting 64M samples/s down to 16k. One I multiplier and one Q multiplier are reused across all 128 FIR taps of all 16 channels, reaching 81.3 MHz Fmax on a 64 MHz clock in 37,624 logic elements. The FPGA links to an ESP32 over SPI, with C firmware that streams audio and tunes over Wi-Fi.</p>
+    html: `<p class="project-stack">SystemVerilog, C, Python, Quartus, QuestaSim &middot; November 2026</p>
+           <ul>
+             <li>Designed a 16-channel AM radio receiver on an Intel MAX 10 FPGA that samples at 64 MHz</li>
+             <li>Isolated each station with I/Q mixing and CIC/FIR decimation filters, cutting 64M samples/s to 16k</li>
+             <li>Reused one I and one Q multiplier for all 128 FIR taps of all 16 channels, achieving 81.3 MHz Fmax (64 MHz clk) with 37,624 LEs</li>
+             <li>Linked the FPGA to an ESP32 over SPI and wrote C firmware to stream audio and tune over Wi-Fi</li>
+           </ul>
            <p><a href="/projects/fpga-am-radio/">Open project page →</a></p>`,
   },
   "elementary-cpu": {
     title: "Elementary CPU",
-    html: `<p>A 4-bit CPU in VHDL with ROM-based instruction fetch and a registered ALU, achieving 250 MHz Fmax in 57 logic elements and 17 registers on an Intel MAX 10 FPGA. The control unit is a state machine that decodes 6 opcodes into datapath control words, including multi-state instructions for data loads and jumps. Every instruction was verified in simulation and on hardware using hand-assembled test programs.</p>
+    html: `<p class="project-stack">VHDL, Quartus &middot; April 2026</p>
+           <ul>
+             <li>Designed a 4-bit CPU with ROM-based instruction fetch and a registered ALU, achieving 250 MHz Fmax in 57 logic elements and 17 registers on an Intel MAX 10 FPGA</li>
+             <li>Implemented the control unit in VHDL as a state machine decoding 6 opcodes into datapath control words, including multi-state instructions for data loads and jumps</li>
+             <li>Verified all instructions in simulation and on hardware using hand-assembled test programs</li>
+           </ul>
            <p><a href="/projects/elementary-cpu/">Open project page →</a></p>`,
   },
   "remote-led-switch": {
     title: "Battery-Powered Remote LED Switch",
-    html: `<p>ESP32 switch on a 100mAh lithium polymer battery with USB-C charge and discharge. Tuned hibernation and duty cycles to reach 12 hours of battery life with under a second of response time, and used ESP Rainmaker for global GPIO control and Wi-Fi management.</p>
+    html: `<p class="project-stack">ESP32, C, Soldering</p>
+           <ul>
+             <li>Used 100mAh lithium polymer battery to enable charging and discharging via USB-C</li>
+             <li>Optimized hibernation and duty cycles; achieved 12-hour battery life with &lt;1s response time</li>
+             <li>Implemented ESP Rainmaker to enable global access to GPIO and manage Wi-Fi connectivity</li>
+           </ul>
            <p><a href="/projects/remote-led-switch/">Open project page →</a></p>`,
   },
   "remote-lcd": {
     title: "Remote LCD",
-    html: `<p>Raspberry Pi Zero 2 W driving a 1602 I2C LCD as a remote serial display. Scripts for ASCII and custom glyphs, long-distance SSH over Tailscale, and a 3D-printed PLA housing.</p>
+    html: `<p>Raspberry Pi Zero 2W + 1602 I2C LCD for a remote serial display. Arduino IDE scripts for ASCII/custom glyphs, long-distance SSH via Tailscale, and a 3D-printed PLA housing.</p>
            <p><a href="/projects/remote-lcd/">Open project page →</a></p>`,
   },
   graphuf: {
     title: "GraphUF",
-    html: `<p>Flask web app that supplements the UF course catalog by showing which courses a given course eventually unlocks. Scraped and cleaned the UF Courses API to process 8M+ unique data points, then built a transitive closure over an 80k-node DAG for O(1) reachability lookups. Built with two teammates over Git, pull requests, and code review.</p>
+    html: `<p class="project-stack">Flask, Git, Nginx, Python, Bash &middot; July 2025 - August 2025</p>
+           <ul>
+             <li>Supplemented UF course catalog with Flask web app to explore transitive course unlocks</li>
+             <li>Collaborated with two teammates, handling Git merge conflicts, pull requests, and code reviews</li>
+             <li>Processed 8M+ unique data points by scraping and cleaning UF Courses API</li>
+             <li>Created transitive closure map of 80k-node DAG to achieve O(1) retrieval of reachable nodes</li>
+           </ul>
            <p><a href="/projects/graphuf/">Open project page →</a></p>`,
   },
   tmodloader: {
     title: "tModLoader",
-    html: `<p>Open source contribution to the official tModLoader repository (10M+ downloads). Independently tracked down and fixed a C# rendering bug that caused some objects to appear misaligned, then authored and merged the pull request.</p>
+    html: `<p class="project-stack">C#, GitHub &middot; October 2025</p>
+           <ul>
+             <li>Authored and merged a PR to the official tModLoader repository (10M+ downloads)</li>
+             <li>Independently fixed a C# rendering bug that caused some objects to appear misaligned</li>
+           </ul>
            <p><a href="/projects/tmodloader/">Open project page →</a></p>`,
   },
   foodcast: {
     title: "Foodcast",
-    html: `<p>Progressive web app built to remove barriers to food budgeting. Served as project manager for an independent software engineering team, guiding design choices; wired up the Walmart Partner API for item search and added threading that cut search response time by 13x on average.</p>
+    html: `<p class="project-stack">Java, Spring Boot, React</p>
+           <ul>
+             <li>Served as Project Manager, guiding design choices for an independent software engineering team</li>
+             <li>Leveraged the Walmart Partner API to power user-friendly item searching</li>
+             <li>Implemented threading to speed up search query response time by 13x on average</li>
+           </ul>
            <p><a href="/projects/foodcast/">Open project page →</a></p>`,
   },
 };

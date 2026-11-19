@@ -466,3 +466,20 @@ h1 {
     padding: 9px 8px;
   }
 }
+
+.project-stack {
+  margin: 0 0 0.5rem;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.project-panel-body ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.15rem;
+  color: var(--muted);
+}
+
+.project-panel-body li {
+  margin: 0.35rem 0;
+  line-height: 1.5;
+}
