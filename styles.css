@@ -267,10 +267,7 @@ h1 {
   width: 100%;
   align-items: flex-end;
   margin: -0.25rem 0 0;
-  scrollbar-width: none;
-}
-.projects-tabs::-webkit-scrollbar {
-  display: none;
+  scrollbar-width: thin;
 }
 
 /* Fade whichever edge still has tabs behind it. */
@@ -369,6 +366,10 @@ h1 {
 @media (max-width: 900px) {
   .projects-tabs {
     gap: 4px;
+    scrollbar-width: none;
+  }
+  .projects-tabs::-webkit-scrollbar {
+    display: none;
   }
 
 

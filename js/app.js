@@ -34,7 +34,13 @@ const projectBlurbs = {
   },
   "remote-lcd": {
     title: "Remote LCD",
-    html: `<p>Raspberry Pi Zero 2W + 1602 I2C LCD for a remote serial display. Arduino IDE scripts for ASCII/custom glyphs, long-distance SSH via Tailscale, and a 3D-printed PLA housing.</p>
+    html: `<p class="project-stack">Tailscale, RaspberryPi OS, SSH, Python</p>
+           <ul>
+             <li>Connected a Raspberry Pi Zero 2W to 1602 I2C LCD to enable serial data transfer to display</li>
+             <li>Programmed scripts using Arduino IDE to display ASCII and custom characters on the display</li>
+             <li>Enabled long-distance SSH from any device using Tailscale Mesh VPN</li>
+             <li>Modeled and 3D printed PLA device housing to safely expose LCD and Micro USB power/data port</li>
+           </ul>
            <p><a href="/projects/remote-lcd/">Open project page →</a></p>`,
   },
   graphuf: {
@@ -150,6 +156,22 @@ const projectBlurbs = {
         strip.classList.toggle("can-scroll-left", strip.scrollLeft > 1);
         strip.classList.toggle("can-scroll-right", strip.scrollLeft < max - 1);
       };
+      strip.addEventListener(
+        "wheel",
+        (e) => {
+          const max = strip.scrollWidth - strip.clientWidth;
+          if (max <= 0) return;
+          const d =
+            Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+          if (d === 0) return;
+          const atStart = strip.scrollLeft <= 0;
+          const atEnd = strip.scrollLeft >= max;
+          if ((d < 0 && atStart) || (d > 0 && atEnd)) return;
+          strip.scrollLeft = Math.max(0, Math.min(max, strip.scrollLeft + d));
+          e.preventDefault();
+        },
+        { passive: false },
+      );
       strip.addEventListener("scroll", updateScrollHints, { passive: true });
       window.addEventListener("resize", updateScrollHints, { passive: true });
       updateScrollHints();
